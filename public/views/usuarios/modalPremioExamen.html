@@ -1,0 +1,40 @@
+
+<div class="modalUsuario">
+
+	<md-dialog class="modalDialog">
+
+	<h2 style="" class="tituloModal" >Entrega de premio por examen realizado: mamografía</h2>
+
+	<md-dialog-content style="min-height: 0px !important;">
+
+	<div class="cuerpoUsuario" class="md-dialog-content" >
+
+		<div class="row">
+
+			<div class="col-md-12 col-lg-12 col-sm-12">
+				<h3 class="tituloUsuario" style="text-align: center;" >¿Estas seguro que quieres entregar el premio por examen realizado ha {{usuarioEntrega.firstLastName}} ({{usuarioEntrega.phoneNumber}})?</h3>
+				<h3 class="infoUsuario" style="text-align: center;">No puedes deshacer esta accion.</h3>
+				
+			</div>
+		</div>
+
+
+
+
+	</div>
+
+</md-dialog-content>
+
+<md-dialog-actions layout="row">
+
+<md-button class="cancelar" ng-click="cancel()"  class="{{ocultarCancel}}">
+Cancelar
+</md-button>
+
+<md-button class="aceptar" ng-click="entregarExamen()" ng-model="btnGuardarDuchas" ng-disabled="btnGuardarDuchas == 'disabled'" >
+Entregar
+</md-button>
+</md-dialog-actions>
+
+</md-dialog> 
+</div>

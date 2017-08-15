@@ -1,0 +1,170 @@
+
+<div class="modalUsuario" style="max-width: 850px;">
+
+	<md-dialog class="modalDialog">
+
+	<h2 style="" class="tituloModal" >Seguimiento de citas: Mamografía </h2>
+
+	<h3 class="tituloUsuario" style="text-align: center;" >{{usuario.name+" "+usuario.lastName}}  -  {{usuario.phoneNumber}}</h3>
+
+	<md-dialog-content style="display: flex;">
+
+
+
+	<div class="cuerpoUsuario" class="md-dialog-content" >
+
+		<div style="text-align: center; width: 100%; margin-top: 20px;" >
+
+			<h2 class="tituloPreguntasSeno" style="text-align: left; display: inline;">¿Agendada?</h2>
+
+			<md-checkbox ng-model="agendada.si" id="si" ng-click="agenda('Si'); validar();si()" aria-label="SI" style="margin-left: 10px;">
+			SI
+		</md-checkbox>
+
+		<md-checkbox ng-model="agendada.no" id="no" aria-label="NO" ng-click="agenda('No');no() ;validar()" style="margin-left: 10px;">
+		NO
+	</md-checkbox>
+
+
+</div>
+
+<div>
+
+	<h3 class="tituloUsuario" style="text-align: center;" > Motivo de cita NO agendada </h3>
+
+	<div style=" margin-top: 10px; display: inline-grid;">
+
+		<md-checkbox ng-model="agendada.noDisponible" ng-disabled="disableMotivo" aria-label="" class="checkMotivo" ng-click="unmark('noDisponible'); validar()" style="margin-left: 10px;">
+		No disponibilidad de tiempo
+	</md-checkbox>
+
+	<md-checkbox ng-model="agendada.noQuiere" aria-label="" ng-disabled="disableMotivo" class="checkMotivo" ng-click="unmark('noQuiere'); validar()" style="margin-left: 10px;">
+	No desea ser atendida
+</md-checkbox>
+
+<md-checkbox ng-model="agendada.noAplica" aria-label="" ng-disabled="disableMotivo" class="checkMotivo" ng-click="unmark('noAplica'); validar()" style="margin-left: 10px;">
+No aplica
+</md-checkbox>
+
+<md-checkbox ng-model="agendada.equivocado" aria-label="" ng-disabled="disableMotivo" class="checkMotivo" ng-click="unmark('equivocado'); validar()" style="margin-left: 10px;">
+Número equivocado
+</md-checkbox>
+
+<md-checkbox ng-model="agendada.noContesta" aria-label="" ng-disabled="disableMotivo" class="checkMotivo" ng-click="unmark('noContesta'); validar()" style="margin-left: 10px;">
+No contesta
+</md-checkbox>
+
+
+
+
+</div>
+
+</div>
+
+
+<div style="display: flex; margin-top: 15px;">
+	<h4 style="margin-top: 7px;">Fecha de la cita: </h4>	
+	<div style="width: 250px; margin-left:10px; ; ">
+		<md-datepicker ng-disabled="agendada.no" md-min-date="fechaMaxima" ng-model="agendada.fecha" ng-change="validar()" readonly md-placeholder="Selecciona la fecha" ></md-datepicker>
+	</div>
+
+
+</div>
+
+<div class="center">
+	<md-button class="md-raised primaryAmate"  ng-click="agendar()" >Agendar</md-button>
+</div>
+
+
+
+<md-table-container style="" >   
+
+<table md-table  ng-model="selected" md-progress="promise">
+	<thead md-head md-order="query.order" md-on-reorder="reordenar">
+		<tr md-row>
+			<th md-column md-order-by="email"><span>Fecha</span></th>
+			<th md-column md-order-by="firstLastName"><span>Agendada</span></th>
+			<th md-column md-order-by="dateBirthday"><span>Motivo NO agendada</span></th>
+			<th md-column md-order-by="state"><span>Fecha cita</span></th>
+			<th md-column md-order-by=""><span>Examen realizado</span></th>					
+		</tr>
+	</thead>
+	<tbody md-body style="height: 500px !important;max-height: 500px !important;">
+		<tr md-row md-select="false" md-select-id="name" class="animate"   ng-repeat="(key, cita) in citas track by $index ">
+			<td md-cell style="">{{cita.fechaRegistro}}</td>	
+			<td md-cell style="">{{cita.agendada}}</td>
+		
+
+
+
+			<td ng-if="cita.motivo==''" md-cell style=""></td>
+			<td ng-if="cita.motivo=='noDisponible'" md-cell style="">No disponibilidad de tiempo</td>
+			<td ng-if="cita.motivo=='noQuiere'" md-cell style="">No desea ser atendida</td>
+			<td ng-if="cita.motivo=='noAplica'" md-cell style="">No aplica</td>
+			<td ng-if="cita.motivo=='equivocado'" md-cell style="">Número equivocado</td>
+			<td ng-if="cita.motivo=='noContesta'" md-cell style="">No contesta</td>
+
+
+			<td md-cell style="">{{cita.fechaCita}}</td>
+
+
+			<td md-cell style="">
+
+				<md-input-container ng-if="cita.agendada == 'Si'" >
+
+				<md-select ng-model="agendada['examen'+$index]"  required ng-change="cambiarExamen(''+cita.id, $index)">
+				<md-option value="NO">NO</md-option>
+				<md-option value="SI">SI</md-option>
+			</md-select>
+
+			<div ng-messages="formularioEnvio.tipo.$error">
+
+			</div>
+		</md-input-container>
+
+		<div ng-if="agendada['examen'+$index] == 'No'">
+			NO
+		</div>
+
+
+	</td>
+
+
+
+
+
+
+
+</tr>
+</tbody>
+</table>
+</md-table-container>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+</md-dialog-content>
+
+<md-dialog-actions layout="row">
+
+<md-button ng-click="hide()" class="aceptar" class="{{ocultarCancel}}">
+Cerrar
+</md-button>
+
+
+</md-dialog-actions>
+
+</md-dialog> 
+</div>

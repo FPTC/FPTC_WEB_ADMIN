@@ -1,0 +1,39 @@
+
+<div class="modalUsuario">
+
+	<md-dialog class="modalDialog">
+
+	<h2 style="" class="tituloModal" >RESPUESTAS DEL USUARIO</h2>
+
+	<md-dialog-content >
+
+	<div class="cuerpoUsuario" class="md-dialog-content" >
+
+		<div class="row">
+
+			<div class="col-md-12 col-lg-12 col-sm-12">
+				<h3 class="tituloUsuario">Nombre</h3>
+				<h3 class="infoUsuario">{{usuario.firstLastName}}</h3>
+				<h3 class="infoUsuario" ng-show="usuario.firstLastName == ''">-</h3>
+			</div>
+		</div>
+
+		
+
+
+
+	</div>
+
+</md-dialog-content>
+
+<md-dialog-actions layout="row">
+
+<md-button ng-click="cancel()"  class="{{ocultarCancel}}">
+Aceptar
+</md-button>
+
+
+</md-dialog-actions>
+
+</md-dialog> 
+</div>

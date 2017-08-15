@@ -1,0 +1,56 @@
+
+<div class="modalUsuario">
+
+	<md-dialog class="modalDialog">
+
+	<h2 style="color: #009997 !important" class="tituloModal" >Habilitar pregunta</h2>
+
+	<md-dialog-content style="min-height: 0px !important;">
+
+	<div class="cuerpoUsuario" class="md-dialog-content" >
+
+		<div class="row">
+
+			<div class="col-md-12 col-lg-12 col-sm-12">
+				<h3 class="tituloUsuario" style="text-align: center;color: #009997 !important" >Estas a punto de habilitar la siguiente pregunta</h3>
+				<h3 class="infoUsuario" style="text-align: center;">{{preguntaHabilitar.text}}</h3>
+
+				<h3 class="tituloUsuario" style="text-align: center; margin-top: 10px !important;color: #009997 !important">Esto es lo que ocurrirá</h3>
+				<ul style="color:#db2763;">
+					
+					<li style="color: black !important;">No se habilitará esta pregunta a personas que terminaron su test.</li>
+					<li style="color: black !important;">Las personas podrán ver esta pregunta en el test.</li>
+				</ul>
+
+				<form>
+					<md-input-container class="md-block">
+					<label>Escribe la palabra "Habilitar" para confirmar la acción</label>
+					<input ng-model="confirmar">
+				</md-input-container>
+			</form>
+
+
+
+		</div>
+	</div>
+
+
+
+
+</div>
+
+</md-dialog-content>
+
+<md-dialog-actions layout="row">
+
+<md-button ng-click="cancel()"  class="{{ocultarCancel}} cancelar">
+Cancelar
+</md-button>
+
+<md-button  ng-click="habilitar()" class="aceptar" ng-disabled="confirmar !== 'Habilitar' " >
+Habilitar
+</md-button>
+</md-dialog-actions>
+
+</md-dialog> 
+</div>

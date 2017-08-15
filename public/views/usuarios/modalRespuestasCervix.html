@@ -1,0 +1,70 @@
+
+<div class="modalUsuario">
+
+	<md-dialog class="modalDialog">
+
+	<h2  class="tituloModal" style="color: #009997 !important;" >RESPUESTAS </h2>
+
+	<md-dialog-content style="display: flex;">
+
+	<div id="cargandoRespuestas" class="visible" style="    margin:auto;">
+			<div class="contenedorProgress" layout="row" layout-sm="column" layout-align="space-around">
+				<md-progress-circular md-warn="#db2763" md-accent="db2763" md-diameter="150">ss</md-progress-circular>
+
+
+				<i style="font-size: 45px; position: absolute; padding: 35px; color: #009997;" class="fa fa-list iconSeccionMenu  imagenProgress" aria-hidden="true"></i>
+
+			</div>
+			<h3 style="text-align: center;">Cargando respuestas...</h3>
+		</div>
+
+	<div class="cuerpoUsuario" class="md-dialog-content" >
+
+	<h2 class="tituloPreguntasSeno center ">{{usuarioDetalle.nombre}}</h2>
+
+		<div class="row marcoRespuesta animate" ng-repeat="respuesta in respuestasMostrar" style="padding: 20px;">
+
+			<h2 class="tituloPreguntasSeno center noMarginVertical" style="color: #009997;">{{respuesta.textoPregunta}}</h2>
+
+			<div class="col-md-12 col-lg-12 col-sm-12  animate" ng-repeat="(llave , ronda) in respuesta.rondas track by $index ">
+				<div class="flex">
+					<h3 class="tituloUsuario" style="color: #009997;">Ronda {{$index+1}}: </h3>
+					<h3 class="tituloUsuario black">&nbsp; {{" "+ronda.respuesta}} </h3>
+
+				</div>
+
+
+				<div ng-if="ronda.anidada" class="col-md-12 col-lg-12 col-sm-12  animate">
+					<h3 class="tituloUsuario noMarginVertical center" style="color: #009997;">{{ronda.anidada.texto}}</h3>
+					<h3 class="tituloUsuario noMarginVertical black">&nbsp; {{" "+ronda.anidada.respuesta}} </h3>
+				</div>
+
+			</div>
+
+
+
+
+		</div>
+
+
+		
+
+		
+
+
+
+	</div>
+
+</md-dialog-content>
+
+<md-dialog-actions layout="row">
+
+<md-button ng-click="hide()"  class="{{ocultarCancel}} aceptar">
+Aceptar
+</md-button>
+
+
+</md-dialog-actions>
+
+</md-dialog> 
+</div>

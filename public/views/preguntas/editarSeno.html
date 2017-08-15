@@ -1,0 +1,236 @@
+
+<div class="modalUsuario">
+
+	<md-dialog class="modalDialog">
+
+	<h2 style="" class="tituloModal" >Edición de preguntas</h2>
+
+	<md-dialog-content >
+
+	<div class="cuerpoUsuario" class="md-dialog-content" >
+
+		<form name="formularioForm">
+
+			<div class="row">
+
+				
+
+	<!-- 	<md-input-container class="col-sm-12 col-md-12 col-lg-12">
+		<md-select ng-model="nuevaPregunta.typeQuestion" placeholder="Tipo de pregunta"  name="tipoPregunta" required ng-change="validar()">
+		<md-option value="Educativa	">Educativa</md-option>
+		<md-option value="Evaluativa">Evaluativa</md-option>
+		<md-option value="Riesgo">Riesgo</md-option>
+	</md-select>
+	<div ng-messages="formularioForm.tipo.$error">
+		<div ng-message="required">Selecciona el tipo de pregunta.</div>
+	</div>
+</md-input-container> -->
+
+</div>
+
+<div class="row">
+
+	<md-input-container class="col-sm-12 col-md-12 col-lg-12">
+	<md-select ng-model="nuevaPregunta.visible" placeholder="¿Disponible a Visualizador?"  name="visible" required ng-change="validar()">
+	<md-option value="0">Visible</md-option>
+	<md-option value="1">No visible</md-option>
+
+</md-select>
+<div ng-messages="formularioForm.tipo.$error">
+	<div ng-message="required">Selecciona la disponibilidad.</div>
+</div>
+</md-input-container>
+
+
+<md-input-container flex="100" class="col-sm-12 col-xl-12 col-md-12 col-lg-12">
+<label>Pregunta </label>
+<input type="text" required name="pregunta" ng-model="nuevaPregunta.text" placeholder="Escribe la pregunta"  ng-change='validar()' >
+<div ng-messages="formularioForm.pregunta.$error">
+	<div ng-message="required">Este campo es requerido.</div>
+</div>
+</md-input-container>
+
+
+
+<md-input-container flex="100" class="col-sm-12 col-xl-12 col-md-12 col-lg-12">
+<label>Mensaje </label>
+<input type="text"  name="mensaje" ng-model="nuevaPregunta.info" placeholder="Escribe el mensaje que se mostrara (no es obligatorio)"  ng-change='validar()' >
+
+</md-input-container>
+
+
+<h2 class="tituloPreguntasSeno">Respuestas</h2>
+
+<div class="row" ng-repeat="(key, respuesta) in  nuevaPregunta.answers track by $index" style="margin-top: 10px; margin-bottom:10px;box-shadow:0px 3px 9px 0px rgba(48, 50, 50, 0.23); ">
+
+
+	<div class="row" style="margin-left: 30px !important; margin-right: 30px !important; padding-top: 18px">
+		<h2 class="tituloPreguntasSeno" style="text-align: left; display: inline;">Respuesta ({{llaves[$index]}}) {{$index + 1}}</h2>
+
+		<button ng-show="$index > 1" class="md-button md-ink-ripple" type="button"  ng-click="eliminarRespuesta(key)" style="min-width:0px !important;" aria-label="Eliminar">
+			<i class="fa fa-trash middleIcon ng-scope" style="min-width:0px !important;color:#a30039;" aria-hidden="true"></i> 
+
+			<div class="md-ripple-container"></div>
+
+			<md-tooltip
+			md-direction="bottom">
+			Eliminar respuesta
+		</md-tooltip>
+	</button>
+
+
+	<div class="row">
+		<md-input-container flex="100" class="col-sm-12 col-xl-12 col-md-7 col-lg-7">
+		<label>Descripción </label>
+		<input type="text"  name="descripcion{{key}}" required ng-model="nuevaPregunta.answers[key].description" placeholder="Escribe el mensaje"  ng-change='validar()' >
+		<div ng-messages="formularioForm['descripcion'+key].$error">
+			<div ng-message="required">Ingrese la descripción</div>
+		</div>
+
+	</md-input-container>
+
+
+
+	<md-input-container class="col-sm-12 col-md-5 col-lg-5">
+	<md-select ng-model="nuevaPregunta.answers[key].value" placeholder="Valor"  name="tipo{{key}}" required ng-change="validar()">
+	<md-option value="true">Correcta</md-option>
+	<md-option value="false">Incorrecta</md-option>
+</md-select>
+
+<div ng-messages="formularioForm['tipo'+key].$error">
+	<div ng-message="required">Selecciona el tipo de pregunta.</div>
+</div>
+</md-input-container>
+</div>
+
+
+<div class="row ">
+	<md-input-container flex="100" class="col-sm-12 col-xl-12 col-md-7 col-lg-7">
+	<label>Puntos </label>
+	<input type="number"  name="points{{key}}" required ng-model="nuevaPregunta.answers[key].points" placeholder="Valor de puntos" value="0" min="0" ng-change='validar()' >
+	<div ng-messages="formularioForm['points'+key].$error">
+		<div ng-message="required">Selecciona el tipo de pregunta.</div>
+		<div ng-message="min">Mínimo 0 puntos.</div>
+	</div>
+
+</md-input-container>
+
+<div class="col-sm-12 col-md-5 col-lg-5" style="text-align: center;">
+	<md-button class="md-raised primaryAmate" ng-disabled=" (respuesta.question) " ng-click="anidarPregunta(key)" >Crear anidada</md-button>
+	<md-tooltip
+	md-direction="bottom">
+	Crear anidada
+</md-tooltip>
+</div>
+
+</div>
+
+<div class="row visible">
+
+	<h2 ng-show="respuesta.question.answers" class="tituloPreguntasSeno " style="margin-top: 10px;">Anidadas</h2>
+
+	<div class="row" ng-if="respuesta.question.answers" style="margin-left: 0px;margin-right: 0px;">
+		<md-input-container flex="100" class="col-sm-12 col-xl-12 col-md-12 col-lg-12">
+		<label>Descripción</label>
+		<input type="text"  name="textAnidada{{key}}" required ng-model="nuevaPregunta.answers[key].question.text" placeholder="Texto anidada"  ng-change='validar()' >
+		<div ng-messages="formularioForm['textAnidada'+key].$error">
+			<div ng-message="required">Es requerido.</div>
+		</div>
+
+	</md-input-container>
+</div>
+
+<div  ng-repeat="(keyAnidada, anidada) in  respuesta.question.answers track by $index">
+	<div>
+		
+		
+		
+		<md-input-container flex="100" class="" style="width: 85% !important">
+		<label>Opción </label>
+		<input type="text" required name="anidada{{keyAnidada}}" ng-model="nuevaPregunta.answers[key].question.answers[keyAnidada].description" placeholder="Escribe la opción"  ng-change='validar()' >
+		<div ng-messages="formularioForm['anidada'+keyAnidada].$error">
+			<div ng-message="required">Este campo es requerido.</div>
+		</div>
+	</md-input-container>
+
+	<button  class="md-button md-ink-ripple " type="button"  ng-click="eliminarAnidada(key, keyAnidada)" style="min-width:0px !important; width: 10% !important; position: absolute;float: right;" aria-label="Eliminar">
+		<i class="fa fa-trash middleIcon ng-scope" style="min-width:0px !important;color:#a30039;" aria-hidden="true"></i> 
+
+		<div class="md-ripple-container"></div>
+
+		<md-tooltip
+		md-direction="bottom">
+		Eliminar opción
+	</md-tooltip>
+</button>
+</div>
+
+</div>
+
+<div class="row" ng-show="nuevaPregunta.answers[key].question">
+
+	<div class="col-sm-12 col-md-12 col-lg-12" style="text-align: center; margin-bottom: 15px;">
+		<md-button class="md-raised primaryAmate"  ng-click="agregarAnidada(key)" >Añadir opción</md-button>
+		<md-tooltip
+		md-direction="bottom">
+		añadir opción
+	</md-tooltip>
+
+</div>
+
+</div>
+
+
+
+
+
+
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+<div class="row" >
+
+	<div class="col-sm-12 col-md-12 col-lg-12" style="text-align: center; margin-bottom: 15px;">
+		<md-button class="md-raised primaryAmate"  ng-click="crearRespuesta()" >Añadir respuesta</md-button>
+		<md-tooltip
+		md-direction="bottom">
+		añadir opción
+	</md-tooltip>
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+
+</form>
+
+</div>
+
+</md-dialog-content>
+
+<md-dialog-actions layout="row">
+
+<md-button ng-click="hide()"  class="{{ocultarCancel}} cancelar" >
+Cancelar
+</md-button>
+
+<md-button  ng-click="enviar()" ng-disabled="!(formularioForm.$valid)" class="aceptar" >
+Guardar
+</md-button>
+</md-dialog-actions>
+
+</md-dialog> 
+</div>

@@ -1,0 +1,177 @@
+
+<div class="titulo" >
+
+
+	<h1 ng-model="user" class="tituloPrincipal visible fadeIn">Detalle</h1>
+
+
+</div>
+
+
+<section style="background-color:white;height:calc(100%); display: inherit; width: 100vw;" >
+
+	<md-button  ng-click="goPreguntas()"  class="aceptar" style="position: absolute;
+	margin-top: calc(50vh - 141px);
+	z-index: 59;
+	width: 50px !important;
+	height: 50px;
+	border-radius: 0px 50% 50% 0px;
+	min-width: 50px !important;
+	margin-left: 0px;
+	padding: 13px !important;" >
+
+	<i style="font-size:24px;" class="fa fa-arrow-circle-left ng-scope" aria-hidden="true"></i>
+</md-button>
+
+<div ng-model="displayForm" id="cierpoInicio">
+
+
+	<div class="cuerpo" style="height: 100%;">
+
+		<div class="seccionCuerpo" style="height: 100%;">
+
+			<md-content  style=" background-color: white; overflow-x: hidden; height: 100%;">
+
+
+				<div class="cuerpoAplicacion" style="display:inline-block; width:80% !important; margin-left:10% !important;">
+
+					<div id="cargandoPreguntas" class="" style="    margin-top: calc(50vh - 220px);">
+						<div class="contenedorProgress" layout="row" layout-sm="column" layout-align="space-around">
+							<md-progress-circular md-warn="#db2763" md-accent="db2763" md-diameter="150">ss</md-progress-circular>
+
+
+							<i style="font-size: 45px; position: absolute; padding: 35px; color: #278493;" class="fa fa-bar-chart iconSeccionMenu  imagenProgress" aria-hidden="true"></i>
+
+						</div>
+						<h3 style="text-align: center;">Cargando cuestionario...</h3>
+					</div>
+
+					<div id="nadaEncontrado" class="noVisible" style="    margin-top: calc(50vh - 220px);">
+
+						<i  class="fa fa-frown-o iconSeccionMenu  imagenProgress noRespondida" aria-hidden="true"></i>
+
+
+
+						<h3 style="text-align: center;">Nadie ha contestado este cuestionario...</h3>
+					</div>
+
+					<div id="encontrado" class="">
+
+						<h2 class="tituloGrafica" style="color:#a30039;"> {{titulo}} </h2>
+
+
+
+
+
+						<div ng-repeat="ronda in objetoGraficas" class="animate">
+
+							<h2 class="tituloGrafica" style="color:#db2763;"> {{ronda.titulo}} </h2>
+
+							<div class="row" style="display:flex;">
+								<div class="cuerpo col-sm-12 col-md-6 col-lg-6" style="height: 100%;">
+
+									<div class="seccionCuerpo" style="height: 100%;">
+
+										<div bar-chart  bar-data='ronda.dataChart' bar-x='y' bar-y='["a"]' bar-labels='ronda.dataX' bar-colors='["#db2763"]'>
+										</div>
+
+									</div>
+
+								</div> 
+
+
+								<div class="cuerpo col-sm-12 col-md-6 col-lg-6"  style="height: 100%; margin: auto;">
+
+									<div class="seccionCuerpo" style="height: {{width}}; width: {{width}};">
+
+
+
+										<div
+										donut-chart
+										donut-data='ronda.pie.labels'
+										donut-colors='["#db2763","#ff6390","#a30039"]'
+										donut-formatter='formateador'>
+									</div>
+
+								</div>
+
+							</div> 
+						</div>
+
+
+
+
+						<div class="row">
+
+
+
+							<div ng-repeat="anidada in ronda.chartAnidadas" class="col-sm-12 col-md-{{12/cantidadAnidadas}} col-lg-{{12/cantidadAnidadas}}">
+
+								<h2 class="tituloGrafica" style="color:#ff6390 !important;">{{anidada.titulo}}</h2>	
+
+								<div class="cuerpo" style="height: 100%;">
+
+									<div class="seccionCuerpo" style="height: 100%;">
+
+										<div class="row">
+
+											<div class="cuerpo col-sm-12 col-md-7 col-lg-8"  style="height: 100%; margin: auto;">
+												<div bar-chart  bar-data='anidada.dataChart' bar-x='y' bar-y='["a"]' bar-labels='anidada.dataX' bar-colors='["#ff6390"]'>
+												</div>
+											</div>
+
+											<div class="cuerpo col-sm-12 col-md-5 col-lg-4"  style="height: 100%; margin: auto;">
+
+												<div
+												donut-chart
+												donut-data='anidada.pie.labels'
+												donut-colors='["#db2763","#ff6390","#a30039"]'
+												donut-formatter='formateador'>
+											</div>
+
+										</div>
+
+									</div>
+
+
+
+								</div>
+
+							</div> 
+
+						</div>
+
+
+					</div>
+
+
+
+
+
+
+				</div>
+
+
+			</div>
+
+
+
+		</div> 
+
+
+
+
+	</md-content>
+
+</div>
+
+</div> 
+
+
+
+</section>
+
+<div class="foot" style="height: 45px; width: 100%; background-color: #ff6390; color: white;">
+	<p style="text-align: center;">Todos los derechos reservados | Ámate | 2017</p>
+</div>
+

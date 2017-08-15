@@ -1,0 +1,89 @@
+			
+<div class="titulo" >
+	<h1 class="tituloPrincipal senoPrimary visible fadeIn">Puntos y premios</h1>
+</div>
+
+<section style="background-color:white;height:calc(100vh); display: inherit; width: 100%;" >
+
+	<div ng-model="displayForm" id="cuerpoInicio" style="display: {{displayForm}}; width: 100%">
+
+		<div class="cuerpo visible" style="height: 100%;">
+
+			<div class="seccionCuerpo visible" style="height: 100%;">
+
+
+				<md-content md-theme="formulario" style=" background-color: white; overflow-x: hidden; height: 100%; overflow-y: hidden;">
+
+					<div class="cuerpoAplicacion visible" style="display:inline; width:100% !important	;height: 100%;  margin-left:0px !important;">
+						
+						<div style="height: calc(100%);background-color: #ed6790;width: 100%;float: right;position: absolute;">
+							<img class="visible imagenPregunta" src="../public/img/puntaje-amate.jpg" >
+						</div>
+						
+						<div class="tablaPuntos" style=" width: 50%;height: 100%;  float: right;display: table;position: absolute;margin-left: 50%; ">
+
+							<div style="width: 70%;text-align: center;font-weight: 500;font-size: 27px;display: table-cell;vertical-align: middle;">
+								<div  class="contenedorPuntos"  style="width: 80%; margin-left: 10%; height: 100px; background-color: #db2763; border-radius: 10px;	display: flex; ">
+									<h2 style="
+									color:white; width: calc(50% - 35px);text-align: right;margin-top: 0px;margin-bottom: 0px;padding: 22px; padding-right: 15px !important">Tienes</h2>
+									<div style="    width: 70px;background: white;height: 70px;margin-top: 15px;border-radius: 50%;padding: 7px;">
+										<h2 style="margin-top: 0px !important; color:#db2763;">{{puntos}}</h2>
+									</div>
+									<h2 style="
+									color:white; width: calc(50% - 35px);text-align: left;margin-top: 0px;margin-bottom: 0px;padding: 22px; padding-left: 15px !important ;">puntos</h2>
+
+
+
+
+
+
+								</div>
+
+								<div class="tablaDePuntos visible" style="width:80%; margin-left: 10%;"  >
+									<table class="table" style="width: 100%;margin-top: 40px;">
+										<thead style="    border: 1px solid #db2763;">
+											<tr>
+												<th style="width: 50%;height: 70px; background-color: #db2763; color: white; font-family: Roboto;">PUNTOS</th>
+												<th style="width: 50%;height: 70px; background-color: #db2763; color: white; font-family: Roboto;">RECARGAS</th>
+											</tr>
+										</thead>
+										<tbody style="border: 1px solid grey;">
+
+
+											<tr class="" ng-repeat="regalo in regalosEnvio track by $index">
+
+											<td>{{regalo.valor}}</td>
+												<td>{{regalo.nombreRegalo}}</td>
+												
+											</tr>								
+										</tbody>
+									</table>
+								</div>
+
+							</div>
+
+
+
+
+
+
+
+
+						</div>
+
+
+
+					</div>
+
+				</md-content>
+
+			</div>
+
+		</div> 
+
+	</div>  
+
+</section>
+<div class="foot" style="height: 45px; width: 100%; background-color: #ff6390; color: white;">
+	<p style="text-align: center;">Todos los derechos reservados | Ámate | 2017</p>
+</div>

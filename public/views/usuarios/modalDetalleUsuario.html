@@ -1,0 +1,134 @@
+
+<div class="modalUsuario">
+
+	<md-dialog class="modalDialog">
+
+	<h2 style="" class="tituloModal" >DATOS USUARIO</h2>
+
+	<md-dialog-content >
+
+	<div class="cuerpoUsuario" class="md-dialog-content" >
+
+		<div class="row">
+
+			<div class="col-md-12 col-lg-12 col-sm-12">
+				<h3 class="tituloUsuario">Nombre</h3>
+				<h3 class="infoUsuario">{{usuario.name}}</h3>
+				<h3 class="infoUsuario" ng-show="usuario.name == ''">-</h3>
+			</div>
+		</div>
+
+		<div class="row">
+
+			<div class="col-md-12 col-lg-12 col-sm-12">
+				<h3 class="tituloUsuario">Apellidos</h3>
+				<h3 class="infoUsuario">{{usuario.lastName}}</h3>
+				<h3 class="infoUsuario" ng-show="usuario.lastName == ''">-</h3>
+			</div>
+		</div>
+
+		<div class="row" ng-show="perfil==0">
+
+			<div class="col-md-12 col-lg-12 col-sm-12">
+				<h3 class="tituloUsuario">Correo electrónico</h3>
+				<h3 class="infoUsuario">{{usuario.email}}</h3>
+			</div>
+		</div>
+
+		<div class="row" >
+
+			<div class="col-md-12 col-lg-12 col-sm-12">
+				<h3 class="tituloUsuario">Teléfono</h3>
+				<h3 class="infoUsuario">{{usuario.phoneNumber}}</h3>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12 col-lg-12 col-sm-12">
+				<h3 class="tituloUsuario">Fecha de nacimiento</h3>
+				<h3 class="infoUsuario">{{usuario.dateBirthday}}</h3>
+				<h3 class="infoUsuario" ng-show="usuario.dateBirthday == ''">-</h3>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12 col-lg-12 col-sm-12">
+				<h3 class="tituloUsuario">Edad</h3>
+				<h3 class="infoUsuario">{{calcularEdad(usuario.dateBirthday)}}</h3>
+				<h3 class="infoUsuario" ng-show="usuario.dateBirthday == ''">-</h3>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12 col-lg-12 col-sm-12">
+				<h3 class="tituloUsuario">Número de hijos</h3>
+				<h3 class="infoUsuario">{{usuario.hasChilds}}</h3>
+			
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12 col-lg-12 col-sm-12">
+				<h3 class="tituloUsuario">Dirección</h3>
+				<h3 class="infoUsuario">{{usuario.address}}</h3>
+				<h3 class="infoUsuario" ng-show="usuario.address == ''">-</h3>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12 col-lg-12 col-sm-12">
+				<h3 class="tituloUsuario">Barrio</h3>
+				<h3 class="infoUsuario">{{usuario.neighborhood}}</h3>
+				<h3 class="infoUsuario" ng-show="usuario.neighborhood == ''">-</h3>
+			</div>
+		</div>
+
+		<div class="row" ng-if="perfil==0">
+			<div class="col-md-12 col-lg-12 col-sm-12">
+				<h3 class="tituloUsuario">Altura</h3>
+				<h3 class="infoUsuario">{{usuario.height}} metros</h3>
+				<h3 class="infoUsuario" ng-show="usuario.height == ''">-</h3>
+			</div>
+		</div>
+
+		<div class="row" ng-if="perfil==0">
+			<div class="col-md-12 col-lg-12 col-sm-12">
+				<h3 class="tituloUsuario">Peso</h3>
+				<h3 class="infoUsuario">{{usuario.weight}} kilos</h3>
+				<h3 class="infoUsuario" ng-show="usuario.weight == ''">-</h3>
+			</div>
+		</div>
+
+		<div class="row" >
+			<div class="col-md-12 col-lg-12 col-sm-12">
+				<h3 class="tituloUsuario">Índice de masa corporal</h3>
+				<h3 class="infoUsuario" ng-show="usuario.weight != '' && usuario.heigth != ''">{{ ( usuario.weight/(usuario.height*usuario.height) ).toPrecision(4)}} </h3>
+				<h3 class="infoUsuario" ng-show="usuario.weight == ''">-</h3>
+			</div>
+		</div>
+
+		<div class="row" ng-if="perfil==0">
+			<div class="col-md-12 col-lg-12 col-sm-12">
+				<h3 class="tituloUsuario">Puntos</h3>
+				<h3 class="infoUsuario">{{usuario.pointsBreast + usuario.pointsCervix}} puntos</h3>
+			</div>
+		</div>
+
+
+
+
+	</div>
+
+</md-dialog-content>
+
+<md-dialog-actions layout="row">
+
+<md-button ng-click="cancel()"  class="{{ocultarCancel}} aceptar">
+Cerrar
+</md-button>
+
+
+</md-dialog-actions>
+
+</md-dialog> 
+</div>

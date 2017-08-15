@@ -1,0 +1,231 @@
+
+<div class="titulo" >
+	<h1 ng-model="user" class="tituloPrincipal visible fadeIn">Preguntas</h1>
+</div>
+
+
+<section style="background-color:white;height:calc(100%); display: inherit; width: 100vw;" >
+
+	<div ng-model="displayForm" id="cierpoInicio" style="display: {{displayForm}};">
+
+		<div class="cuerpo" style="height: 100%;">
+			
+			<div class="seccionCuerpo" style="height: 100%;">
+
+				<md-content  style=" background-color: white; overflow-x: hidden; height: 100%;">
+
+
+				<div class="cuerpoAplicacion" style="display:inline-block; width:100% !important; margin-left:0px !important;">
+
+
+					<h2 class="tituloPreguntasSeno">Preguntas Cáncer de Seno</h2>
+
+					<md-toolbar class="md-hue-2" style="width: 80%; margin-left: 10%; margin-top: 10px; background-color: white !important">
+
+					<div class="md-toolbar-tools">
+						<i class="fa fa-search middleIcon iconoSearch" aria-hidden="true"></i> 
+						<form name="filter.form" class="barraSearch">
+							<input ng-model="querySeno.filter" type="text" class="inputSearch" placeholder="Buscar en esta tabla...">
+						</form>
+
+					</div>
+				</md-toolbar>
+				<div id="contenedorTabla" class="" style="width:80% !important; margin-left:10% !important;">
+
+
+					<md-table-container style="" >   
+
+					<table md-table  ng-model="selectedSeno" md-progress="promise">
+						<thead md-head md-order="querySeno.order" md-on-reorder="reordenar">
+							<tr md-row>
+								<th md-column><span>#</span></th>
+								<th md-column md-order-by="text"><span>Texto</span></th>
+								<th md-column md-order-by="typeQuestion"><span>Tipo</span></th>
+								<th md-column  style="width:20% !important; text-align: center;">Acciones disponibles</th>
+							</tr>
+						</thead>
+						<tbody md-body style="height: 500px !important;max-height: 500px !important;">
+							<tr md-row md-select="false" md-select-id="name" class="animateFast"   ng-repeat="(key, pregunta) in preguntasSenoCopia | orderBy: querySeno.order  | limitTo: querySeno.limit : (querySeno.page -1) * querySeno.limit | filter: querySeno.filter ">
+
+								<td md-cell style="">{{key + 1}}</td>	
+								<td md-cell style="">{{pregunta.text}}</td>
+								<td md-cell style="">{{pregunta.typeQuestion}}</td>
+								
+								<td md-cell style="text-align: center;">
+
+									<md-button ng-click="detalleSeno(pregunta.id)"  class="noMargin"  style="min-width:0px !important;">
+									<md-tooltip md-direction="bottom">
+									Ver graficas
+								</md-tooltip>
+								<i class="fa fa-bar-chart middleIcon" style="min-width:0px !important;color:#db2763;" aria-hidden="true"></i> 
+							</md-button>
+
+
+							<div ng-show="perfil == 0" class="box">
+
+								<md-button ng-click="editarPreguntaSeno($event, pregunta )" class="noMargin"  style="min-width:0px !important;">
+								<i class="fa fa-pencil-square middleIcon" style="min-width:0px !important;color:#ff6390;" aria-hidden="true"></i> 
+								<md-tooltip
+								md-direction="bottom">
+								Editar
+							</md-tooltip>
+						</md-button>
+
+
+						<md-button ng-if="pregunta.enable == true"  class="noMargin" ng-click="eliminarPregunta($event, pregunta, 0)" style="min-width:0px !important;">
+						<i class="fa fa-eye-slash middleIcon" style="min-width:0px !important;color:#a30039;" aria-hidden="true"></i> 
+						<md-tooltip
+						md-direction="bottom">
+						Inhabilitar
+					</md-tooltip>
+				</md-button>
+
+				<md-button ng-if="pregunta.enable == false" ng-click="habilitarPregunta($event, pregunta, 0)" class="noMargin"  style="min-width:0px !important;">
+				<i class="fa fa-eye middleIcon" style="min-width:0px !important;color:#a30039;" aria-hidden="true"></i> 
+				<md-tooltip
+				md-direction="bottom">
+				Habilitar
+			</md-tooltip>
+		</md-button>
+
+	</div>
+
+
+
+
+</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+</md-table-container>
+
+
+<!-- how to change the pagination label -->
+<md-table-pagination ng-model="cantidadPreguntasSeno" md-limit="querySeno.limit" md-limit-options="[10, 50, 100]" md-page="querySeno.page"  md-total="{{cantidadPreguntasSeno}}" md-label="{page: 'Página:', rowsPerPage: 'Filas por página:', of: 'de'}" md-on-paginate="logPaginationSeno" md-page-select></md-table-pagination>
+
+</div>
+
+
+
+
+<h2 class="tituloPreguntasCervix">Preguntas Cáncer de cuello uterino</h2>
+
+<md-toolbar class="md-hue-2" style="width: 80%; margin-left: 10%; margin-top: 10px; background-color: white !important">
+
+<div class="md-toolbar-tools">
+	<i class="fa fa-search middleIcon iconoSearch" aria-hidden="true"></i> 
+	<form name="filter.form" class="barraSearch">
+		<input ng-model="queryCervix.filter" type="text" class="inputSearch" placeholder="Buscar en esta tabla...">
+	</form>
+
+</div>
+</md-toolbar>
+<div id="contenedorTabla" class="" style="width:80% !important; margin-left:10% !important;">
+
+
+	<md-table-container style="" >   
+
+	<table md-table  ng-model="selectedCervix" md-progress="promise">
+		<thead md-head md-order="queryCervix.order" md-on-reorder="reordenar">
+			<tr md-row>
+				<th md-column><span>#</span></th>
+				<th md-column md-order-by="text"><span>Texto</span></th>
+				<th md-column md-order-by="typeQuestion"><span>Tipo</span></th>
+				<th md-column md-numeric style="width:20% !important; text-align: center;">Acciones disponibles</th>
+			</tr>
+		</thead>
+		<tbody md-body style="height: 500px !important;max-height: 500px !important;">
+			<tr md-row md-select="false" md-select-id="name" class="animateFast"   ng-repeat="(key, pregunta) in preguntasCervix | orderBy: queryCervix.order  | limitTo: queryCervix.limit : (queryCervix.page -1) * queryCervix.limit | filter: queryCervix.filter ">
+
+				<td md-cell style="">{{key + 1}}</td>	
+				<td md-cell style="">{{pregunta.text}}</td>
+				<td md-cell style="">{{pregunta.typeQuestion}}</td>
+
+				<td md-cell style="text-align: center;">
+
+					<md-button ng-click="detalleCervix(pregunta.id)" class="noMargin"  style="min-width:0px !important;">
+					<md-tooltip md-direction="bottom">
+					Ver graficas
+				</md-tooltip>
+				<i class="fa fa-bar-chart middleIcon" style="min-width:0px !important;color:#009997;" aria-hidden="true"></i> 
+			</md-button>
+
+
+			<div ng-show="perfil == 0" class="box">
+				<md-button ng-click="editarPreguntaCervix($event, pregunta)" class="noMargin"  style="min-width:0px !important;">
+				<i class="fa fa-pencil-square middleIcon" style="min-width:0px !important;color:#00d6d3;" aria-hidden="true"></i> 
+				<md-tooltip
+				md-direction="bottom">
+				Editar
+			</md-tooltip>
+		</md-button>
+
+
+
+
+
+		<md-button ng-if="pregunta.enable == true" class="noMargin"  ng-click="eliminarPreguntaCervix($event, pregunta, 1)" style="min-width:0px !important;">
+		<i class="fa fa-eye-slash middleIcon" style="min-width:0px !important;color:#007776;" aria-hidden="true"></i> 
+		<md-tooltip
+		md-direction="bottom">
+		Inhabilitar
+	</md-tooltip>
+</md-button>
+
+<md-button ng-if="pregunta.enable == false" class="noMargin"  ng-click="habilitarPreguntaCervix($event, pregunta, 1)" style="min-width:0px !important;">
+<i class="fa fa-eye middleIcon" style="min-width:0px !important;color:#007776;" aria-hidden="true"></i> 
+<md-tooltip
+md-direction="bottom">
+Habilitar
+</md-tooltip>
+</md-button>
+
+</div>
+
+
+</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+</md-table-container>
+
+
+<!-- how to change the pagination label -->
+<md-table-pagination ng-model="cantidadPreguntasCervix" md-limit="queryCervix.limit" md-limit-options="[10, 50, 100]" md-page="queryCervix.page"  md-total="{{cantidadPreguntasCervix}}" md-label="{page: 'Página:', rowsPerPage: 'Filas por página:', of: 'de'}" md-on-paginate="logPaginationCervix" md-page-select></md-table-pagination>
+
+</div>
+
+
+
+</div>
+
+</md-content>
+
+</div>
+
+</div> 
+
+</div> 
+
+
+
+
+</section>
+<button ng-if="perfil == 0" class="md-fab md-button md-ink-ripple btnAdicionarUsuario" type="button"  ng-click="crearPregunta($event)">
+	<i style="font-size:24px;" class="fa fa-plus  ng-scope" aria-hidden="true"></i>
+	<div class="md-ripple-container"></div>
+</button>
+<div class="foot" style="height: 45px; width: 100%; background-color: #ff6390; color: white;">
+	<p style="text-align: center;">Todos los derechos reservados | Ámate | 2017</p>
+</div>
+
