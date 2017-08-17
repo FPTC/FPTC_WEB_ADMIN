@@ -126,7 +126,7 @@
         $scope.informacionUsuario = {};
         $scope.informacionUsuario.parentProperty = "";
         $scope.imagenNav = {};
-        $scope.imagenNav.parentProperty = "http://40.71.81.33/fundacancer/public/img/amateLogoSolo.png";
+        $scope.imagenNav.parentProperty = "img/amateLogoSolo.png";
         $scope.nombreUsuario = {};
         $scope.nombreUsuario.parentProperty = "";
         $scope.mostrarMenuHeader = {};
@@ -191,7 +191,7 @@
                             $scope.nombreUsuario.parentProperty = "" + user.providerData[0].displayName;
                         } else {
 
-                            $scope.imagenNav.parentProperty = "http://40.71.81.33/fundacancer/public/img/amateLogoSolo.png";
+                            $scope.imagenNav.parentProperty = "img/amateLogoSolo.png";
                             $scope.nombreUsuario.parentProperty = "" + user.providerData[0].uid;
                         }
                         $scope.mostrarMenuHeader.parentProperty = "block";
