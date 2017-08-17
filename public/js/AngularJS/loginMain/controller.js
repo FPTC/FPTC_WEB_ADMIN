@@ -13,7 +13,7 @@
     $scope.getToastPosition = function() {
         sanitizePosition();
         return Object.keys($scope.toastPosition).filter(function(pos) {
-            console.log(pos);
+       
             return $scope.toastPosition[pos];
         }).join(' ');
     };
@@ -30,7 +30,7 @@
     $scope.height = (($(window).height()) - 580) / 2;
     $(window).resize(function() {
         $scope.height = (($(window).height()) - 580) / 2;
-        console.log($scope.height);
+       
 
         $scope.$apply();
     });
@@ -42,7 +42,7 @@
     $scope.goRecuperar = function(ir) {
         $scope.myDate = new Date();
         $scope.isOpen = false;
-        console.log(ir);
+      
         $location.path("recuperar");
     }
 
@@ -54,10 +54,10 @@
     $scope.validar = function() {
         if ($scope.formularioForm.$valid) {
             $scope.botonRegistrar = false;
-            console.log("valido");
+           
         } else {
             $scope.botonRegistrar = true;
-            console.log("invalido");
+       
         }
     };
     $scope.recuperar = function() {
@@ -69,16 +69,16 @@
 
     $scope.estadoo = $mdSidenav('left').isOpen();
 
-    console.log("estadoo es "+ $scope.estadoo);
+
     $("#cuerpo").removeClass("cuerpoWeb");
-    console.log("removido");
+   
     if ($scope.estadoo == true) {
         $mdSidenav("left").toggle();
     }
 
 
     $scope.goLogin = function(ir) {
-        console.log(ir);
+     
         $location.path("login");
     }
     
@@ -99,19 +99,18 @@
         var email = $scope.formulario.envio.email;
         var password = $scope.formulario.envio.password;
         var log =    firebase.auth().signInWithEmailAndPassword(email, password).then(function(result) {
-            console.log(result);
+           
 
             //hay que validar ahora, que este usuario tenga permiso para entrar a la aplicacion de administracion, pero se mirara luego el paso a revisar
 
 
             var llegada=  firebase.database().ref('administracion/'+result.uid). once('value').then(function(datos) {
 
-                console.log("llega desde administracion");
-                console.log(datos.val());
+             
 
                 if(datos.val() == null){
 
-                    console.log("es nulo el man");
+                   
                     var pinTo = $scope.getToastPosition();
                     var toast = $mdToast.simple().textContent('Usuario invalido o sin permisos')
                     .action('Vale :(').highlightAction(true)
@@ -133,7 +132,7 @@
                     });
                 }
                 else{
-                    console.log("ddd");
+                 
                      $location.path("usuarios");
 
                      $scope.$apply();
@@ -144,10 +143,9 @@
 
 
         }).catch(function(error) {
-            console.log("llega error");
-            console.log(error);
+           
             if (error) {
-                console.log(error.message);
+         
                 var pinTo = $scope.getToastPosition();
                 var toast = $mdToast.simple().textContent('Se ha presentado un error: usuario o contraseña invalidos. ').action('Vale :(').highlightAction(true).hideDelay(5000).position(pinTo).parent(document.querySelectorAll('#toast-container'));
                 $mdToast.show(toast).then(function(response) {

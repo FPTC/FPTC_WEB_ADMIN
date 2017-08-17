@@ -42,10 +42,10 @@
 				var llegada=  firebase.database().ref('administracion/'+user.uid). once('value').then(function(datos) {
 
 					$scope.perfil = datos.val().profile;
-					console.log($scope.datosUsuario);
+					
 
 					if(datos.val() !== null){
-						console.log("cambiando estado");
+						
 						$scope.cambiarEstado();
 
 						$scope.detalleSeno = function (id){
@@ -300,23 +300,23 @@
 								for(pregunta in seno.val()){
 
 									if(datos.val().profile == 1){
-										console.log("visible");
+									
 
 										if(seno.val()[pregunta].visible){
 
 											if(seno.val()[pregunta].visible == 0){
 
 
-												console.log(pregunta);
+												
 												$scope.preguntasSeno[$scope.cantidadPreguntasSeno] = seno.val()[pregunta];
 												$scope.cantidadPreguntasSeno ++;
-												console.log($scope.preguntasSeno[$scope.cantidadPreguntasSeno] );
+												
 											}
 										}
 										else{
 											$scope.preguntasSeno[$scope.cantidadPreguntasSeno] = seno.val()[pregunta];
 											$scope.cantidadPreguntasSeno ++;
-											console.log($scope.preguntasSeno[$scope.cantidadPreguntasSeno] );
+											
 										}
 
 									}else{
@@ -325,7 +325,7 @@
 										$scope.preguntasSeno[$scope.cantidadPreguntasSeno] = seno.val()[pregunta];
 
 										$scope.cantidadPreguntasSeno ++;
-										console.log($scope.preguntasSeno[$scope.cantidadPreguntasSeno] );
+										
 									}
 
 								}
@@ -354,20 +354,20 @@
 											if(cervix.val()[pregunta].visible == 0){
 												$scope.preguntasCervix[$scope.cantidadPreguntasCervix] = cervix.val()[pregunta];
 												$scope.cantidadPreguntasCervix ++;
-												console.log($scope.preguntasCervix[$scope.cantidadPreguntasCervix] );
+												
 											}
 										}
 										else{
 											$scope.preguntasCervix[$scope.cantidadPreguntasCervix] = cervix.val()[pregunta];
 											$scope.cantidadPreguntasCervix ++;
-											console.log($scope.preguntasCervix[$scope.cantidadPreguntasCervix] );
+											
 										}
 
 									}
 									else{
 										$scope.preguntasCervix[$scope.cantidadPreguntasCervix] = cervix.val()[pregunta];
 										$scope.cantidadPreguntasCervix ++;
-										console.log($scope.preguntasCervix[$scope.cantidadPreguntasCervix] );
+										
 									}
 								}
 
@@ -410,7 +410,7 @@ else{
 
 		return Object.keys($scope.toastPosition)
 		.filter(function(pos) {
-			console.log(pos);
+			
 			return $scope.toastPosition[pos]; })
 		.join(' ');
 	};
@@ -469,7 +469,6 @@ else{
 
 		$scope.validar();
 
-		console.log($scope.nuevaPregunta);
 	}
 
 
@@ -481,8 +480,7 @@ else{
 		$scope.nuevaPregunta.answers[idPreguntaDefault].description="";
 		$scope.nuevaPregunta.answers[idPreguntaDefault].points = 0;
 		$scope.nuevaPregunta.answers[idPreguntaDefault].value = "";
-		
-		console.log($scope.nuevaPregunta);
+
 
 	}
 
@@ -493,12 +491,11 @@ else{
 	$scope.validar = function (){
 		if($scope.formularioForm.$valid){
 			$scope.btnCrear=false;
-			console.log("valido");
-			console.log($scope.nuevaPregunta);
+		
 		}   
 		else{
 			$scope.btnCrear=true;
-			console.log("invalido");
+		
 		}
 	};
 
@@ -528,7 +525,6 @@ else{
 
 		$scope.maximoAnidadas[nodo].cantidad--;
 
-		console.log($scope.maximoAnidadas);
 
 	}
 
@@ -540,7 +536,7 @@ else{
 		$scope.nuevaPregunta.answers[nodo].question.answers[add].description = "";	
 		$scope.maximoAnidadas[nodo].cantidad++;
 
-		console.log($scope.maximoAnidadas);
+	
 
 		//esperamos medio segundo para lanzar la validacion
 		setTimeout(function() {
@@ -551,15 +547,14 @@ else{
 
 	}
 
-	console.log($scope.nuevaPregunta);
-
+	
 
 	$scope.enviar = function(){
 		
 		//se revisa el tipo de pregunta, seno o lo otro
 
 		if($scope.nuevaPregunta.tipo == 0){
-			console.log("es seno");
+		
 
 			$scope.idNodo = "id"+( ( new Date().getTime()) );
 
@@ -590,7 +585,7 @@ else{
 			$scope.pregunta.answers = $scope.nuevaPregunta.answers;
 			$scope.pregunta.visible = $scope.nuevaPregunta.visible;
 
-			console.log($scope.pregunta);
+		
 
 			firebase.database().ref('preguntas/breastCancer/'+$scope.idNodo ).update($scope.pregunta).then(function(){
 
@@ -618,7 +613,7 @@ else{
 
 
 		}else{
-			console.log("es cancer");
+	
 
 			$scope.idNodo = "id"+( ( new Date().getTime()) );
 
@@ -684,7 +679,7 @@ else{
 
 .controller('editarController' , function ($scope  , $mdDialog, $mdMedia, $location , registrarCliente, $firebaseAuth, $mdToast,  $timeout , $mdSidenav,transacciones ) {
 
-	console.log($scope.preguntaEditar);
+
 
 	$scope.hide = function() {
 		$mdDialog.hide();
@@ -704,7 +699,7 @@ else{
 
 		return Object.keys($scope.toastPosition)
 		.filter(function(pos) {
-			console.log(pos);
+			
 			return $scope.toastPosition[pos]; })
 		.join(' ');
 	};
@@ -771,7 +766,7 @@ else{
 
 		$scope.llaves = Object.keys($scope.nuevaPregunta.answers);
 
-		console.log($scope.nuevaPregunta);
+
 	}
 
 
@@ -786,7 +781,7 @@ else{
 		$scope.nuevaPregunta.answers[idPreguntaDefault].id = idPreguntaDefault;
 		$scope.llaves = Object.keys($scope.nuevaPregunta.answers);
 		
-		console.log($scope.nuevaPregunta);
+		
 
 	}
 
@@ -798,12 +793,11 @@ else{
 	$scope.validar = function (){
 		if($scope.formularioForm.$valid){
 			$scope.btnCrear=false;
-			console.log("valido");
-			console.log($scope.nuevaPregunta);
+		
 		}   
 		else{
 			$scope.btnCrear=true;
-			console.log("invalido");
+			
 		}
 	};
 
@@ -833,7 +827,7 @@ else{
 
 		$scope.maximoAnidadas[nodo].cantidad--;
 
-		console.log($scope.maximoAnidadas);
+		
 
 	}
 
@@ -847,7 +841,7 @@ else{
 		$scope.nuevaPregunta.answers[nodo].question.answers[add].description = "";	
 		$scope.maximoAnidadas[nodo].cantidad++;
 
-		console.log($scope.maximoAnidadas);
+	
 
 		//esperamos medio segundo para lanzar la validacion
 		setTimeout(function() {
@@ -858,7 +852,7 @@ else{
 
 	}
 
-	console.log($scope.nuevaPregunta);
+	
 
 
 	$scope.enviar = function(){
@@ -868,7 +862,7 @@ else{
 		//se revisa el tipo de pregunta, seno o lo otro
 
 		if($scope.nuevaPregunta.tipo == 0){
-			console.log("es seno");
+		
 
 			
 
@@ -881,7 +875,7 @@ else{
 
 			if($scope.nuevaPregunta.info != undefined){
 				$scope.pregunta.info = $scope.nuevaPregunta.info	;
-				console.log("viene info");
+				
 			}
 
 			if($scope.nuevaPregunta.info == ""){
@@ -907,7 +901,7 @@ else{
 			$scope.pregunta.answers = $scope.nuevaPregunta.answers;
 			$scope.pregunta.visible = $scope.nuevaPregunta.visible;
 
-			console.log($scope.pregunta);
+			
 
 			firebase.database().ref('preguntas/breastCancer/'+$scope.idNodo ).update($scope.pregunta).then(function(){
 
@@ -934,7 +928,7 @@ else{
 
 
 		}else{
-			console.log("es cancer");
+		
 
 
 
@@ -947,7 +941,7 @@ else{
 
 			if($scope.nuevaPregunta.info != undefined){
 				$scope.pregunta.info = $scope.nuevaPregunta.info	;
-				console.log("viene info");
+				
 			}
 			//hay que cambiar el value de string a true o false booleano
 			for(respuesta in $scope.nuevaPregunta.answers){
@@ -1003,7 +997,7 @@ else{
 })
 
 .controller('eliminarController' , function ($scope  , $mdDialog, $mdMedia, $location , registrarCliente, $firebaseAuth, $mdToast,  $timeout , $mdSidenav,transacciones ) {
-	console.log($scope.preguntaEliminar);
+
 
 	$scope.confirmar="";
 
@@ -1021,7 +1015,7 @@ else{
 
 		return Object.keys($scope.toastPosition)
 		.filter(function(pos) {
-			console.log(pos);
+		
 			return $scope.toastPosition[pos]; })
 		.join(' ');
 	};
@@ -1083,7 +1077,7 @@ else{
 						}
 						else{
 
-							console.log("preguntas/cervixCancer/"+$scope.preguntaEliminar.id);
+					
 							var guardarRespuesta = firebase.database().ref("preguntas/cervixCancer/"+$scope.preguntaEliminar.id)
 							.update($scope.variableUpdate).then(function(){
 								var pinTo = $scope.getToastPosition();
@@ -1131,7 +1125,7 @@ else{
 
 
 .controller('habilitarController' , function ($scope  , $mdDialog, $mdMedia, $location , registrarCliente, $firebaseAuth, $mdToast,  $timeout , $mdSidenav,transacciones ) {
-	console.log($scope.preguntaHabilitar);
+
 
 	$scope.confirmar="";
 
@@ -1149,7 +1143,7 @@ else{
 
 		return Object.keys($scope.toastPosition)
 		.filter(function(pos) {
-			console.log(pos);
+		
 			return $scope.toastPosition[pos]; })
 		.join(' ');
 	};

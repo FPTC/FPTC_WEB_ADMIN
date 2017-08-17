@@ -40,7 +40,7 @@
 
 			return Object.keys($scope.toastPosition)
 			.filter(function(pos) {
-				console.log(pos);
+			
 				return $scope.toastPosition[pos]; })
 			.join(' ');
 		};
@@ -97,8 +97,7 @@
 
 
 			serviceDatos.default($scope.usuario.user, milisegundos).then(function(respuesta){
-				console.log(respuesta);
-
+				
 
 				var pinTo = $scope.getToastPosition();
 				var toast = $mdToast.simple()
@@ -152,7 +151,7 @@
 
 						$scope.datos=[];
 						for(documento in $scope.documentos){
-							console.log($scope.documentos[documento]);
+						
 							var e =$scope.documentos[documento];
 							var f = new Date(parseInt( $scope.documentos[documento].date ));
 							e.fecha = ""+f.getDate()+"/"+(f.getMonth()+1)+"/"+f.getFullYear()+" "+""+f.getHours()+":"+f.getMinutes()+":"+f.getSeconds() ;
@@ -170,11 +169,11 @@
 					if(datos.val() !== null){
 
 						$scope.perfil = datos.val().profile;
-						console.log($scope.datosUsuario);
+				
 
 
 
-						console.log("cambiando estado");
+					
 						$scope.cambiarEstado();
 
 						$scope.entregarPremio = function (ev, usuario){

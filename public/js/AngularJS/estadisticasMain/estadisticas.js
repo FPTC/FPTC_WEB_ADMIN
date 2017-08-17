@@ -25,7 +25,7 @@
 		var es=firebase.auth().onAuthStateChanged(function(user) {
 
 			if(user){
-				console.log("cambiando estado");
+				
 				$scope.cambiarEstado();
 
 				document.getElementById("cargandoPreguntas").classList.remove("noVisible");
@@ -77,7 +77,7 @@
 
 								$scope.recuento++;
 								var edad = $scope.calcularEdad($scope.usuarios[usuario].dateBirthday);
-								console.log(edad);
+								
 
 								$scope.edades[edad]++;
 
@@ -128,9 +128,7 @@
 							];
 							$scope.usuariosGrafica.dataX=["Usuarios"];
 
-							
-							console.log($scope.cantidadUsuarios);
-							console.log($scope.perfilIncompleto);
+					
 
 							$scope.tortaPerfil = {};
 							$scope.tortaPerfil.datos =[ {label: "Perfil diligenciado", value: ($scope.cantidadUsuarios - $scope.perfilIncompleto)}, {label: "Perfil sin diligenciar", value: $scope.perfilIncompleto}];
@@ -150,19 +148,18 @@
 							
 						}
 
-						console.log($scope.auxMediana.sort());
+				
 
 						$scope.auxMediana = $scope.auxMediana.sort();
 
 						$scope.mediana=0;
 
 
-						console.log($scope.auxMediana.length/2);
 
 						if($scope.auxMediana.length%2 == 0 ){
 
 							$scope.primero = $scope.auxMediana.length/2;
-							console.log(" "+$scope.auxMediana[$scope.primero-1]+" "+$scope.auxMediana[$scope.primero]);
+							
 
 							$scope.mediana = ($scope.auxMediana[$scope.primero-1] + $scope.auxMediana[$scope.primero])/2;
 							
@@ -184,7 +181,6 @@
 						}
 						
 
-						console.log($scope.mediana);
 
 						document.getElementById("cargandoPreguntas").classList.remove("visible");
 							document.getElementById("cargandoPreguntas").classList.add("noVisible");	
@@ -193,8 +189,6 @@
 							document.getElementById("grafica").classList.add("visible");	
 
 
-
-						console.log($scope.graficaPuntual);
 
 					}
 				});

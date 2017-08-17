@@ -69,7 +69,7 @@
 
         jQuery(document).keyup(function(e){
             if(e.keyCode==27){
-                console.log("esap");
+              
 
                 return false;
             }
@@ -90,7 +90,7 @@
 
             return Object.keys($scope.toastPosition)
             .filter(function(pos) {
-                console.log(pos);
+               
                 return $scope.toastPosition[pos]; })
             .join(' ');
         };
@@ -114,7 +114,7 @@
 
             $scope.datos=[];
             for(documento in $scope.documentos){
-                console.log($scope.documentos[documento]);
+         
                 $scope.datos.push($scope.documentos[documento]);
             }
 
@@ -137,11 +137,11 @@
         window.onresize = function(){ 
 
             if (window.matchMedia("(orientation: portrait)").matches) {
-                console.log("v");
+           
             }
 
             if (window.matchMedia("(orientation: landscape)").matches) {
-                console.log("h");    
+               
             }
         } 
 
@@ -169,11 +169,8 @@
 
 
 
-                        console.log("llega desde administracion");
-                        console.log(datos.val());
-
                         if(datos.val()==  null){
-                          console.log("        no es admin" );
+                      
                           $location.path("login");
                           $scope.$apply();
                       }
@@ -186,8 +183,7 @@
                         $scope.perfil=datos.val().profile;
 
 
-                        console.log("no fue nulo el admin");
-                        console.log(datos);
+                 
 
                         if (user.providerData[0].providerId == "facebook.com") {
 
@@ -219,7 +215,7 @@
                         if ($scope.estadoo == false) {
                             $mdSidenav("left").toggle();
 
-                            console.log("abriendo menu");
+                 
                         }
                         $("#nav").css("display", "");
                         $("#cuerpo").addClass("cuerpoWeb");
@@ -239,7 +235,7 @@
                         $scope.openMenu = function($mdOpenMenu, ev) {
 
                             $scope.$on("$mdMenuClose", function() {
-                                console.log("menu closing");
+                              
                             });
                             originatorEv = ev;
                             $mdOpenMenu(ev);
@@ -258,11 +254,11 @@
                         $scope.openNav = true;
                         $scope.estado = function estado() {
                             if ($scope.openNav == true) {
-                                console.log("0");
+                      
                                 $scope.openNav = false;
                                 $("#cuerpo").removeClass("cuerpoWeb");
                             } else {
-                                console.log("c");
+                               
                                 $scope.openNav = true;
                                 $("#cuerpo").addClass("cuerpoWeb");
                             }
@@ -290,7 +286,7 @@
 
 } else {
 
-    console.log("        no es admin" );
+ 
     $location.path("login");
 }
 });

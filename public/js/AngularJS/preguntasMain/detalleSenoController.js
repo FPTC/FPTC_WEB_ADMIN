@@ -40,7 +40,7 @@
 					var llegada=  firebase.database().ref('administracion/'+user.uid). once('value').then(function(datos) {
 
 						if(datos.val() !== null){
-							console.log("cambiando estado");
+							
 							$scope.cambiarEstado();
 
 							var oportunidades=  firebase.database().ref('configuracion').once('value').then(function(configuracion) {
@@ -50,8 +50,7 @@
 								if(configuracion.val() != null){
 
 									//consulto la pregunta para saber la cantidad de respuestas de la misma
-									console.log("llega la configuracion");
-									console.log(configuracion.val());
+								
 
 									var pregunta =  firebase.database().ref('preguntas/breastCancer/'+$scope.idPregunta).once('value').then(function(pregunta) {
 
@@ -60,8 +59,7 @@
 											$scope.pregunta = pregunta.val();
 											$scope.titulo = $scope.pregunta.text;
 
-											console.log("llega la pregunta");
-											console.log(pregunta.val());
+										
 
 
 											//consulto el nodo respuesta para la pregunta
@@ -74,8 +72,7 @@
 
 												if(respuestas.val() != null){
 
-													console.log("llega la respuestas");
-													console.log(respuestas.val());
+												
 
 													$scope.objetoGraficas = [];
 													$scope.respuestas = respuestas.val();
@@ -112,9 +109,7 @@
 
 													}
 
-													console.log($scope.objetoAnidadas);
-													console.log(cantidadAnidadas);
-
+													
 
 
 													for(ronda=0 ; cantidadRondas > ronda ; ronda++){
@@ -149,13 +144,13 @@
 
 															if($scope.keyRonda in $scope.respuestas[usuario]){
 
-																console.log("usuario "+usuario+" si existe en las respuestas la ronda"+ronda+" y tiene como respuesta "+$scope.respuestas[usuario]["respuesta"+ronda]);
+															
 
 																//ahora, debe existir la respuesta del usuario en el objetocontador, si no, ya no es una respuesta a una opcion valida
 
 																$scope.idRespuesta = $scope.respuestas[usuario]["respuesta"+ronda];
 
-																console.log("se buscara en el objeto el indice "+$scope.idRespuesta);
+															
 
 																if($scope.idRespuesta  in $scope.objetoContador){
 
@@ -168,8 +163,7 @@
 
 																	if($scope.respuestas[usuario][$scope.anidadaRonda] in $scope.copiaAnidada[$scope.respuestas[usuario]["respuesta"+ronda]].respuestas){
 																		$scope.copiaAnidada[$scope.respuestas[usuario]["respuesta"+ronda]].respuestas[$scope.respuestas[usuario][$scope.anidadaRonda]].cantidad++;
-																		console.log("entro "+ronda);
-																		console.log($scope.copiaAnidada);
+																		
 																	}
 
 
@@ -188,7 +182,7 @@
 
 														}
 
-														console.log($scope.copiaAnidada);
+													
 
 														$scope.objetoGraficas[ronda].data = $scope.objetoContador;
 														$scope.objetoGraficas[ronda].cantidadAnidadas = cantidadAnidadas;
@@ -209,8 +203,6 @@
 													document.getElementById("encontrado").classList.add("visible");	
 
 
-													console.log("objeto final ");
-													console.log($scope.objetoGraficas);
 
 													$scope.objetoRepeat = [];	
 
@@ -267,7 +259,7 @@
 
 													$scope.$apply();
 
-													console.log($scope.objetoGraficas);
+											
 
 
 													$scope.labels = ["Download Sales", "In-Store Sales", "Mail-Order Sales"];
@@ -305,9 +297,7 @@
 														
 													}
 
-													console.log(total);
-													console.log(totalAnidada);
-
+												
 
 
 													for(ronda in $scope.objetoGraficas){
@@ -340,7 +330,7 @@
 
 															for(datosPie in $scope.objetoGraficas[ronda].anidada[anidada].respuestas){
 
-																console.log(datosPie);
+													
 
 																$scope.objetoGraficas[ronda].chartAnidadas[anidada].pie.labels.push( {label: $scope.objetoGraficas[ronda].anidada[anidada].respuestas[datosPie].descripcion, value: ( ($scope.objetoGraficas[ronda].anidada[anidada].respuestas[datosPie].cantidad/totalAnidada[ronda])*100).toPrecision(4) });
 
@@ -352,7 +342,7 @@
 													}
 
 
-													console.log($scope.objetoGraficas);
+										
 
 													$timeout(function () {
 

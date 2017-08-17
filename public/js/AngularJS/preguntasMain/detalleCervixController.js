@@ -27,7 +27,7 @@
 					var llegada=  firebase.database().ref('administracion/'+user.uid). once('value').then(function(datos) {
 
 						if(datos.val() !== null){
-							console.log("cambiando estado");
+						
 							$scope.cambiarEstado();
 
 							var oportunidades=  firebase.database().ref('configuracion').once('value').then(function(configuracion) {
@@ -37,17 +37,13 @@
 								if(configuracion.val() != null){
 
 									//consulto la pregunta para saber la cantidad de respuestas de la misma
-									console.log("llega la configuracion");
-									console.log(configuracion.val());
+							
 
 									var pregunta =  firebase.database().ref('preguntas/cervixCancer/'+$scope.idPregunta).once('value').then(function(pregunta) {
 
 										if(pregunta.val() != null){
 
-											console.log("llega la pregunta");
-											console.log(pregunta.val());
-
-
+										
 
 											$scope.pregunta = pregunta.val();
 											$scope.titulo = $scope.pregunta.text;
@@ -58,15 +54,11 @@
 
 											var pregunta=  firebase.database().ref("respuestas/cervixCancer/"+$scope.idPregunta).once("value").then(function(respuestas) {
 
-												console.log(respuestas);
-
 
 
 												if(respuestas.val() != null){
 
-													console.log("llega la respuestas");
-													console.log(respuestas.val());
-
+										
 													$scope.objetoGraficas = [];
 													$scope.respuestas = respuestas.val();
 													
@@ -102,10 +94,6 @@
 
 													}
 
-													console.log($scope.objetoAnidadas);
-													console.log(cantidadAnidadas);
-
-
 
 													for(ronda=0 ; cantidadRondas > ronda ; ronda++){
 
@@ -140,13 +128,13 @@
 
 															if($scope.keyRonda in $scope.respuestas[usuario]){
 
-																console.log("usuario "+usuario+" si existe en las respuestas la ronda"+ronda+" y tiene como respuesta "+$scope.respuestas[usuario]["respuesta"+ronda]);
+															
 
 																//ahora, debe existir la respuesta del usuario en el objetocontador, si no, ya no es una respuesta a una opcion valida
 
 																$scope.idRespuesta = $scope.respuestas[usuario]["respuesta"+ronda];
 
-																console.log("se buscara en el objeto el indice "+$scope.idRespuesta);
+												
 
 																if($scope.idRespuesta  in $scope.objetoContador){
 
@@ -155,13 +143,13 @@
 
 																//ahora, se revisa si esta respuesta seleccionada tiene anidada, y se adjunta
 
-																console.log($scope.copiaAnidada);												
+																								
 
 																if($scope.respuestas[usuario]["respuesta"+ronda] in $scope.copiaAnidada){
 
 																	if($scope.respuestas[usuario][$scope.anidadaRonda] in $scope.copiaAnidada[$scope.respuestas[usuario]["respuesta"+ronda]].respuestas){
 																		$scope.copiaAnidada[$scope.respuestas[usuario]["respuesta"+ronda]].respuestas[$scope.respuestas[usuario][$scope.anidadaRonda]].cantidad++;
-																		console.log("entro");
+																	
 																	}
 																}
 
@@ -187,8 +175,6 @@
 
 													//ahora se crea el objeto data con los datos a graficar
 
-													console.log("objeto final ");
-													console.log($scope.objetoGraficas);
 
 													$scope.objetoRepeat = [];	
 
@@ -289,9 +275,7 @@
 													}
 
 
-														$scope.$apply();
-
-													console.log($scope.objetoGraficas);
+														$scope.$apply();							
 
 
 													$scope.labels = ["Download Sales", "In-Store Sales", "Mail-Order Sales"];
@@ -330,12 +314,6 @@
 													}
 
 
-
-													console.log(total);
-													console.log(totalAnidada);
-
-
-
 													for(ronda in $scope.objetoGraficas){
 
 														$scope.objetoGraficas[ronda].pie= {};
@@ -366,7 +344,7 @@
 
 															for(datosPie in $scope.objetoGraficas[ronda].anidada[anidada].respuestas){
 
-																console.log(datosPie);
+														
 
 																$scope.objetoGraficas[ronda].chartAnidadas[anidada].pie.labels.push( {label: $scope.objetoGraficas[ronda].anidada[anidada].respuestas[datosPie].descripcion, value: ( ($scope.objetoGraficas[ronda].anidada[anidada].respuestas[datosPie].cantidad/totalAnidada[ronda])*100).toPrecision(4) });
 
@@ -382,7 +360,7 @@
 
 													$scope.$apply();
 
-													console.log($scope.objetoGraficas);
+											
 
 													document.getElementById("cargandoPreguntas").classList.remove("visible");
 													document.getElementById("cargandoPreguntas").classList.add("noVisible");	

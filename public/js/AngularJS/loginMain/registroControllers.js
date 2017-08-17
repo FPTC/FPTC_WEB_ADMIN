@@ -15,7 +15,6 @@
 
     .controller('registroController', function($scope, $mdDialog, $mdMedia, $location, registrarCliente, $firebaseAuth, $mdToast, $timeout, $mdSidenav) {
 
-        console.log("otro aparte");
 
         var last = {
             bottom: false,
@@ -47,18 +46,18 @@
         $scope.height = (($(window).height()) - 580) / 2;
         $(window).resize(function() {
             $scope.height = (($(window).height()) - 580) / 2;
-            console.log($scope.height);
+           
         });
 
 
         $scope.goRecuperar = function(ir) {
             $scope.myDate = new Date();
             $scope.isOpen = false;
-            console.log(ir);
+          
             $location.path("recuperar");
         }
         $scope.goRegistro = function(ir) {
-            console.log(ir);
+            
             $location.path("registro");
         }
         $scope.prueba.parentProperty = "none";
@@ -67,10 +66,10 @@
         $scope.validar = function() {
             if ($scope.formularioForm.$valid) {
                 $scope.botonRegistrar = false;
-                console.log("valido");
+                
             } else {
                 $scope.botonRegistrar = true;
-                console.log("invalido");
+              
             }
         };
         $scope.recuperar = function() {
@@ -78,33 +77,32 @@
 
         }
         firebase.auth().signOut().then(function() {
-            console.log("deslogueado");
+          
         }, function(error) {
 
         });
         $scope.estadoo = $mdSidenav('left').isOpen();
         $("#cuerpo").removeClass("cuerpoWeb");
-        console.log("removido");
+       
         if ($scope.estadoo == true) {
             $mdSidenav("left").toggle();
         }
 
 
         $scope.goLogin = function(ir) {
-            console.log(ir);
+           
             $location.path("login");
         }
 
 
 
         $scope.registrarse = function() {
-            console.log("email " + $scope.emailRegistro);
-            console.log("contraseña " + $scope.password);
+          
             firebase.auth().createUserWithEmailAndPassword($scope.emailRegistro, $scope.password).then(function(result) {
 
 
                   firebase.auth().signOut().then(function() {
-                        console.log("deslogueado");
+                       
                     }, function(error) {
 
                     });
@@ -121,9 +119,7 @@
                    $location.path("login");
                });
 
-                console.log("Imprimiendo variable result"+result);
-                console.log(result);
-
+         
 
                 firebase.database().ref('usuarios/' + result.uid).set({
                   firstLastName: "" ,
