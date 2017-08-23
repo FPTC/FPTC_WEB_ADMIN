@@ -1,6 +1,6 @@
 (function(){
 
-	var app = angular.module('detalleSenoControllers' , ['angular.morris' ,'ngMaterial', 'ngMessages' , 'ngAnimate', 'ekosave-registro' ,'firebase', 'chart.js' ])
+	var app = angular.module('detalleSenoControllers' , ['angular.morris' ,'ngMaterial', 'ngMessages' , 'ngAnimate', 'funcancer' ,'firebase', 'chart.js' ])
 
 
 	.controller('detalleSenoMainController' , function ($scope , $mdDialog , $q,$mdMedia , $location , $firebaseAuth , $mdToast, $timeout , $mdSidenav ) {

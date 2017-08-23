@@ -1,6 +1,6 @@
 (function(){
 
-	var app = angular.module('usuariosControllers' , ['angular.morris' ,'ngMaterial', 'ngMessages' , 'md.data.table' , 'ngAnimate', 'ekosave-registro' ,'firebase' ])
+	var app = angular.module('usuariosControllers' , ['angular.morris' ,'ngMaterial', 'ngMessages' , 'md.data.table' , 'ngAnimate', 'funcancer' ,'firebase' ])
 
 
 

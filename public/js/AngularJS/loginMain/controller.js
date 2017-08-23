@@ -1,5 +1,5 @@
 (function() {
-    var app = angular.module('loginControllers', ['angular.morris', 'ngMaterial', 'ngMessages', 'ngAnimate', 'firebase'])
+    var app = angular.module('loginControllers', ['angular.morris', 'ngMaterial', 'ngMessages', 'ngAnimate', 'funcancer' ,'firebase'])
 
     .controller('loginMainController', function($scope, $mdDialog, $mdMedia, $location, $firebaseAuth, $mdToast, $timeout, $mdSidenav) {
 

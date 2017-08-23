@@ -1,5 +1,5 @@
 (function() {
-    var app = angular.module('ekosave-registro', ['estadisticasControllers','edicionController','datosControllers' ,'recuperarControllers' ,'usuariosControllers', 'preguntasControllers' ,'webMainControllers','detalleSenoControllers' , 'detalleCervixControllers' ,'loginControllers','ngRoute', 'firebase', "ngMessages"]);
+    var app = angular.module('funcancer', ['estadisticasControllers','edicionController','datosControllers' ,'recuperarControllers' ,'usuariosControllers', 'preguntasControllers' ,'webMainControllers','detalleSenoControllers' , 'detalleCervixControllers' ,'loginControllers','ngRoute', 'firebase', "ngMessages"]);
     app.config(['$routeProvider', function($routeProvider) {
         $routeProvider.when('/login', {
             templateUrl: "views/login/main.html",

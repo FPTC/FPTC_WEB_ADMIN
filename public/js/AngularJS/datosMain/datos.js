@@ -1,6 +1,6 @@
 (function(){
 
-	var app = angular.module('datosControllers' , ['angular.morris' ,'ngMaterial', 'ngMessages' , 'md.data.table' , 'ngAnimate', 'ekosave-registro' ,'firebase' ])
+	var app = angular.module('datosControllers' , ['angular.morris' ,'ngMaterial', 'ngMessages' , 'md.data.table' , 'ngAnimate', 'funcancer' ,'firebase' ])
 
 
 	.service('serviceDatos', function($http) {
