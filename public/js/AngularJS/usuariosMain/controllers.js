@@ -477,7 +477,7 @@
 
 									temporal["edad"]=$scope.calcularEdad(llegada.val()[usuario].dateBirthday);
 
-									temporal["fechaCreado"] =  Date.parse($scope.date( ""+llegada.val()[usuario].dateCreated ,"mm/dd/yyyy","/") );
+									temporal["fechaCreado"] =  Date.parse($scope.date( ""+llegada.val()[usuario].dateCreated ,"dd/mm/yyyy","/") );
 
 									
 									$scope.usuarios[$scope.cantidadUsuarios] = temporal;
