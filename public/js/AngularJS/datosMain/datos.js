@@ -8,7 +8,7 @@
 
 		this.default = function(name, milisegundos) {
 
-			var respuesta= $http.get("http://40.71.81.33:3000/generateUserDataFile", {params:{"userName":name, "date": milisegundos}})
+			var respuesta= $http.get("https://amate-b8ceb.appspot.com/generateUserDataFile", {params:{"userName":name, "date": milisegundos}})
 			.then(function (response) { 
 
 				var respuesta = response

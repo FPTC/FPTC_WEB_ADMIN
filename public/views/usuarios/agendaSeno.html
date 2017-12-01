@@ -61,11 +61,14 @@ No contesta
 
 </div>
 
-
+<div style="display: inline-flex;">
+	<h4 style="margin-top: 27px;">Hora: </h4>
+	<md-time-picker ng-disabled="agendada.no" ng-model="agendada.hora" no-meridiem no-auto-switch></md-time-picker>
+</div>
 <div style="display: flex; margin-top: 15px;">
 	<h4 style="margin-top: 7px;">Fecha de la cita: </h4>	
 	<div style="width: 250px; margin-left:10px; ; ">
-		<md-datepicker ng-disabled="agendada.no" md-min-date="fechaMaxima" ng-model="agendada.fecha" ng-change="validar()" readonly md-placeholder="Selecciona la fecha" ></md-datepicker>
+		<md-datepicker ng-disabled="agendada.no" md-min-date="" ng-model="agendada.fecha" ng-change="validar()" readonly md-placeholder="Selecciona la fecha" ></md-datepicker>
 	</div>
 
 
@@ -85,8 +88,9 @@ No contesta
 			<th md-column md-order-by="email"><span>Fecha</span></th>
 			<th md-column md-order-by="firstLastName"><span>Agendada</span></th>
 			<th md-column md-order-by="dateBirthday"><span>Motivo NO agendada</span></th>
+			<th md-column md-order-by=""><span>Hora cita</span></th>
 			<th md-column md-order-by="state"><span>Fecha cita</span></th>
-			<th md-column md-order-by=""><span>Examen realizado</span></th>					
+			<th md-column md-order-by=""><span>Examen realizado</span></th>
 		</tr>
 	</thead>
 	<tbody md-body style="height: 500px !important;max-height: 500px !important;">
@@ -104,7 +108,7 @@ No contesta
 			<td ng-if="cita.motivo=='equivocado'" md-cell style="">Número equivocado</td>
 			<td ng-if="cita.motivo=='noContesta'" md-cell style="">No contesta</td>
 
-
+			<td md-cell style="">{{cita.hora}}</td>
 			<td md-cell style="">{{cita.fechaCita}}</td>
 
 
@@ -115,26 +119,20 @@ No contesta
 				<md-select ng-model="agendada['examen'+$index]"  required ng-change="cambiarExamen(''+cita.id, $index)">
 				<md-option value="NO">NO</md-option>
 				<md-option value="SI">SI</md-option>
-			</md-select>
+			    </md-select>
 
-			<div ng-messages="formularioEnvio.tipo.$error">
+			    <div ng-messages="formularioEnvio.tipo.$error">
+			    </div>
+		        </md-input-container>
 
-			</div>
-		</md-input-container>
-
-		<div ng-if="agendada['examen'+$index] == 'No'">
-			NO
-		</div>
-
-
-	</td>
+				<div ng-if="agendada['examen'+$index] == 'No'">
+					NO
+				</div>
 
 
+			</td>
 
-
-
-
-
+	
 </tr>
 </tbody>
 </table>

@@ -76,8 +76,8 @@
 							if($scope.usuarios[usuario].dateBirthday!=""){
 
 								$scope.recuento++;
+
 								var edad = $scope.calcularEdad($scope.usuarios[usuario].dateBirthday);
-								
 
 								$scope.edades[edad]++;
 
@@ -107,7 +107,9 @@
 								}
 								$scope.auxMediana.push(edad);
 
-								$scope.media += edad;
+								if(edad>0){
+								  $scope.media += edad;
+								}
 
 								contador++;
 							}
@@ -173,11 +175,11 @@
 						}
 
 						$scope.datoMedia = ($scope.media/contador);
-
 						$scope.datoMedia = $scope.datoMedia.toString();
-
+						
 						if($scope.datoMedia.length>4){
 							$scope.datoMedia= $scope.datoMedia.substr(0,4);
+							
 						}
 						
 

@@ -1,6 +1,6 @@
 (function(){
 
-	var app = angular.module('usuariosControllers' , ['angular.morris' ,'ngMaterial', 'ngMessages' , 'md.data.table' , 'ngAnimate', 'funcancer' ,'firebase' ])
+	var app = angular.module('usuariosControllers' , ['angular.morris' ,'ngMaterial', 'ngMessages' , 'md.data.table' , 'ngAnimate', 'funcancer' ,'firebase', 'md.time.picker' ])
 
 
 
@@ -565,6 +565,7 @@ else{
 	$scope.usuario = $scope.usuarioDetalle;
 
 	$scope.agendada={};
+
 	$scope.citas=[];
 	var llegada=  firebase.database().ref('citas/'+$scope.usuario.uid+"/breast"). once('value').then(function(citas) {
 
@@ -610,8 +611,8 @@ else{
 
 
 	$scope.agendada.fecha="";
+	$scope.agendada.hora = new Date();
 	$scope.agendada.no =false;
-
 	$scope.agendada.si = true;
 	$scope.disableMotivo=true; 
 	$scope.agendo = "Si";
@@ -625,8 +626,7 @@ else{
 
 	$scope.si = function(){
 		$scope.disableMotivo = true;
-
-
+        $scope.agendada.hora = new Date();
 		for(indice in repeat){
 
 			$scope.agendada[repeat[indice]] = false;
@@ -644,7 +644,7 @@ else{
 	$scope.no = function(){
 		$scope.disableMotivo = false;
 		$scope.agendada.fecha = "";
-
+        $scope.agendada.hora = "";
 	}
 
 	$scope.unmark = function(name){
@@ -707,7 +707,8 @@ else{
 
 				$scope.datosEnvio = {};
 				$scope.datosEnvio.fechaRegistro = (new Date().getDate() )+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear();
-				$scope.datosEnvio.fechaCita = ($scope.agendada.fecha.getDate() )+"/"+($scope.agendada.fecha.getMonth())+"/"+$scope.agendada.fecha.getFullYear();
+				$scope.datosEnvio.fechaCita = ($scope.agendada.fecha.getDate() )+"/"+($scope.agendada.fecha.getMonth())+"/"+($scope.agendada.fecha.getFullYear());
+				$scope.datosEnvio.hora = ($scope.agendada.hora.getHours())+":"+($scope.agendada.hora.getMinutes());
 				$scope.datosEnvio.motivo = "";
 				$scope.datosEnvio.agendada = $scope.agendo;
 				$scope.datosEnvio.realizado = "NO";
@@ -775,6 +776,7 @@ else{
 				$scope.datosEnvio = {};
 				$scope.datosEnvio.fechaRegistro = (new Date().getDate() )+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear();
 				$scope.datosEnvio.fechaCita = "";
+				$scope.datosEnvio.fechaHora = "";
 				$scope.datosEnvio.motivo = $scope.razon;
 				$scope.datosEnvio.agendada = "No";
 				$scope.datosEnvio.realizado = "NO";
@@ -874,6 +876,7 @@ else{
 	$scope.usuario = $scope.usuarioDetalle;
 
 	$scope.agendada={};
+	$scope.tipo={};
 	$scope.citas=[];
 	var llegada=  firebase.database().ref('citas/'+$scope.usuario.uid+"/cervix"). once('value').then(function(citas) {
 
@@ -883,6 +886,7 @@ else{
 			$scope.citas[i] = citas.val()[cita];
 
 			$scope.agendada["examen"+i] = citas.val()[cita].realizado;
+			$scope.tipo["tipo"+i] = citas.val()[cita].tipo;
 			i++;
 		}
 
@@ -916,9 +920,29 @@ else{
 
 	}
 
+    $scope.cambiarTipo = function(key, i){
 
+		firebase.database().ref('citas/' +$scope.usuario.uid+"/cervix/"+key).update({'tipo' : $scope.tipo["tipo"+i]}).then(function(administracion){
+
+			var pinTo = $scope.getToastPosition();
+			var toast = $mdToast.simple()
+			.textContent('Cambios realizados.')
+			.action('Vale :)')
+			.highlightAction(true)
+			.hideDelay(10000)
+			.position(pinTo)
+			.parent(document.querySelectorAll('#toast-container'));
+
+			$mdToast.show(toast).then(function(response) {
+				if ( response == 'ok' ) {      
+				}
+			});  
+		});
+
+	}
 
 	$scope.agendada.fecha="";
+	$scope.agendada.hora = new Date();
 	$scope.agendada.no =false;
 
 	$scope.agendada.si = true;
@@ -935,7 +959,7 @@ else{
 	$scope.si = function(){
 		$scope.disableMotivo = true;
 
-
+        $scope.agendada.hora = new Date();
 		for(indice in repeat){
 
 			$scope.agendada[repeat[indice]] = false;
@@ -953,6 +977,7 @@ else{
 	$scope.no = function(){
 		$scope.disableMotivo = false;
 		$scope.agendada.fecha = "";
+		$scope.agendada.hora = "";
 	
 	}
 
@@ -1014,8 +1039,10 @@ else{
 				$scope.datosEnvio = {};
 				$scope.datosEnvio.fechaRegistro = (new Date().getDate() +1)+"/"+(new Date().getMonth() +1)+"/"+new Date().getFullYear();
 				$scope.datosEnvio.fechaCita = ($scope.agendada.fecha.getDate() )+"/"+($scope.agendada.fecha.getMonth())+"/"+$scope.agendada.fecha.getFullYear();
+     			$scope.datosEnvio.hora = ($scope.agendada.hora.getHours())+":"+($scope.agendada.hora.getMinutes());
 				$scope.datosEnvio.motivo = "";
 				$scope.datosEnvio.agendada = $scope.agendo;
+				$scope.datosEnvio.tipo =
 				$scope.datosEnvio.realizado = "NO";
 				$scope.datosEnvio.id = $scope.registro;
 
@@ -1080,6 +1107,7 @@ else{
 				$scope.datosEnvio = {};
 				$scope.datosEnvio.fechaRegistro = (new Date().getDate() )+"/"+(+new Date().getMonth() +1)+"/"+new Date().getFullYear();
 				$scope.datosEnvio.fechaCita = "";
+				$scope.datosEnvio.fechaHora = "";
 				$scope.datosEnvio.motivo = $scope.razon;
 				$scope.datosEnvio.agendada = "No";
 				$scope.datosEnvio.realizado = "NO";

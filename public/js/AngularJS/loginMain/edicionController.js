@@ -170,6 +170,7 @@
          $scope.formulario.envio.name  = datos.val().firstLastName;
        $scope.formulario.envio.fechaNacimiento = mydate; // "2017-04-25";//new Date(datos.val().dateBirthDay);
        $scope.formulario.envio.telefono = datos.val().phoneNumber;
+       $scope.formulario.envio.celular = datos.val().phoneNumberCel;
        $scope.formulario.envio.direccion = datos.val().address;
        $scope.formulario.envio.barrio = datos.val().neighborhood;
        $scope.formulario.envio.estatura = datos.val().height;
@@ -202,6 +203,7 @@
           dateBirthday :  dia+"/"+mes+"/"+date.getFullYear() ,
           email: user.email ,
           phoneNumber: $scope.formulario.envio.telefono ,
+          phoneNumberCel: $scope.formulario.envio.celular ,
           address: $scope.formulario.envio.direccion ,
           neighborhood: $scope.formulario.envio.barrio ,
           height: $scope.formulario.envio.estatura ,
@@ -226,6 +228,7 @@
           dateBirthday :  dia+"/"+mes+"/"+date.getFullYear() ,
           email: user.email ,
           phoneNumber: $scope.formulario.envio.telefono ,
+          phoneNumberCel: $scope.formulario.envio.celular ,
           address: $scope.formulario.envio.direccion ,
           neighborhood: $scope.formulario.envio.barrio ,
           height: $scope.formulario.envio.estatura ,
