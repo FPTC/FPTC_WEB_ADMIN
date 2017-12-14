@@ -116,6 +116,7 @@
 
 					firebase.database().ref('usuarios/'+user.uid).once('value').then(function(usuario) {
 						$scope.usuario = usuario.val();
+
 						
 					});
 
@@ -524,6 +525,15 @@ else{
 		return edad;
 	}
 
+	$scope.revisarEmail = function (email) {
+		if (email != undefined && email != "") {
+			email = email;
+		} else{
+			email = $scope.usuario.useremail;
+		}
+		return email;
+	}
+
 })
 
 
@@ -922,6 +932,7 @@ else{
 
     $scope.cambiarTipo = function(key, i){
 
+    	console.log("entro cambiar tipo");
 		firebase.database().ref('citas/' +$scope.usuario.uid+"/cervix/"+key).update({'tipo' : $scope.tipo["tipo"+i]}).then(function(administracion){
 
 			var pinTo = $scope.getToastPosition();
@@ -1042,7 +1053,7 @@ else{
      			$scope.datosEnvio.hora = ($scope.agendada.hora.getHours())+":"+($scope.agendada.hora.getMinutes());
 				$scope.datosEnvio.motivo = "";
 				$scope.datosEnvio.agendada = $scope.agendo;
-				$scope.datosEnvio.tipo =
+				$scope.datosEnvio.tipo = "CIT";
 				$scope.datosEnvio.realizado = "NO";
 				$scope.datosEnvio.id = $scope.registro;
 
