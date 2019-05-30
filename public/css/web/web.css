@@ -1,7 +1,41 @@
 
+.raizBox{
+	position: relative;
+	margin-left: 330px;
+	height: 100%;
+	padding-top: 18px;
+	width: 100%;
+	z-index: 10000000;
+	left: 52px;
+	color: white !important;
+}
+
+.raizObjeto{
+	margin: auto auto auto 0px;
+	cursor: pointer;
+	color: black;
+	text-decoration: none !important;
+	display: inherit;
+	color: white;
+}
+
+
+.raizBox a:hover{
+	color:black !important;
+}
+
+.lineBlock {
+	display: inline-block;
+	color: white;
+}
+
 .aceptar{
 	background-color: #009997 !important;
 	color:white !important;
+}
+
+.centered{
+	text-align: center !important;
 }
 
 .cancelar{
@@ -155,7 +189,7 @@ and (min-width : 1024px) and (max-width: 1400px) {
 
 @media (min-width: 640px) {
 	.modalUsuario{
-		width: 50%;
+		width: 50%; 
 	}
 
 	.cuerpoUsuario{
@@ -172,7 +206,8 @@ and (min-width : 1024px) and (max-width: 1400px) {
 	}
 
 	.tituloModal{
-		text-align:center ;  font-size: 50px !important;
+		text-align:center;
+		font-size: 50px !important;
 		color: #db2763;
 		font-family: 'Oswald', sans-serif;
 		margin-bottom: 0px !important;
@@ -1598,4 +1633,118 @@ p{
 								}
 								.inputCervixCancer{
 									border-color: #009997 !important;
+								}
+
+
+								/* v2 */
+								md-dialog .md-dialog-content {
+									padding: 24px;
+									min-height: inherit;
+								}
+
+								[aria-label*="prompt"] md-dialog-content{
+									padding-bottom: 0px !important;
+								}
+
+								[aria-label*="prompt"] .md-cancel-button{
+									background-color: #db2763 !important;
+									color: white !important;
+								}
+
+								[aria-label*="prompt"] .md-confirm-button{
+									background-color: #009997 !important;
+									color: white !important;
+								}
+
+								.modalLineal md-dialog-content{
+									min-height:inherit !important;
+									height: initial;
+								}
+
+								.modalLineal{
+									min-height:inherit !important;
+									height: initial;
+									width: 300px;
+								}
+
+								.modalLineal .cuerpoUsuario{
+									padding:0px 20px;
+								}
+
+								.modalLineal .tituloModal{
+									margin:10px;
+									font-size:3em !important;
+								}
+
+								thead{
+									border-bottom: 1px solid #e0e0e0;
+								}
+
+								.gridi{
+									display: grid !important;
+								}
+
+								.mauto{
+									margin: auto;
+								}
+
+
+
+
+								.tabUsuarios md-tab-item:nth-of-type(1){
+									background-color: rgb(123, 123, 123);
+									color:white !important;
+									width:20%;
+								}
+
+
+								.tabUsuarios md-tab-item:nth-of-type(2){
+									background-color:rgb(221, 0, 0);
+									color:white !important;
+									width:20%;
+								}
+
+
+								.tabUsuarios md-tab-item:nth-of-type(3){
+									background-color:#ffab00;
+									color:white !important;
+									width:20%;
+								}
+
+
+								.tabUsuarios md-tab-item:nth-of-type(4){
+									background-color:#00b2ff;
+									color:white !important;
+									width:20%;
+								}
+
+
+								.tabUsuarios md-tab-item:nth-of-type(5){
+									background-color:#209000;
+									color:white !important;
+									width:20%;
+								}
+
+								.tabUsuarios md-pagination-wrapper{
+									width: 100%;
+								}
+
+								.tabUsuarios md-ink-bar{
+									height: 8px;
+									background: white;
+								}
+
+								.tabUsuarios md-tabs-wrapper{
+									border-bottom: 0px !important;
+								}
+
+								.tabUsuarios md-toolbar{
+									background: white  !important;
+								}
+
+								.tabUsuarios md-tab-item.md-active{
+									background-color: white !important;
+									color: #4CAF50 !important;
+									border-top: 1px solid #80808054;
+									font-weight: 900;
 								}

@@ -1,0 +1,42 @@
+
+<div class="modalLineal">
+
+	<md-dialog class="modalDialog">
+
+		<h2 style="" class="tituloModal" >Crear país</h2>
+
+		<md-dialog-content >
+
+			<div class="cuerpoUsuario" class="md-dialog-content" >
+
+				<form name="formularioForm">
+
+					<md-input-container flex="100" class="col-sm-12 col-xl-12 col-md-12 col-lg-12">
+					<label>Nombre </label>
+						<input type="text" required name="nombre" ng-model="nombre" ng-pattern="/^[a-zA-ZzäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙ\s]*$/" placeholder="Escribe el nombre del país" >
+						<div ng-messages="formularioForm.nombre.$error">
+							<div ng-message="required">Este campo es requerido.</div>
+							<div ng-message="pattern">No se admiten números ni caracteres no alfabeticos.</div>
+						</div>
+					</md-input-container>
+
+				</form>
+
+			</div>
+
+		</md-dialog-content>
+
+		<md-dialog-actions layout="row">
+
+			<md-button ng-click="hide()" class="{{ocultarCancel}} cancelar">
+				Cancelar
+			</md-button>
+
+			<md-button  ng-click="crear()" class="aceptar" ng-disabled="!(formularioForm.$valid)" >
+				crear
+			</md-button>
+		</md-dialog-actions>
+
+	</md-dialog>
+
+</div>

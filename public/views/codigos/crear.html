@@ -1,0 +1,43 @@
+
+<div class="modalLineal">
+
+	<md-dialog class="modalDialog">
+
+		<h2 style="" class="tituloModal" >Crear códigos</h2>
+
+		<md-dialog-content >
+
+			<div class="cuerpoUsuario" class="md-dialog-content" >
+
+				<form name="formularioForm">
+
+					<md-input-container flex="100" class="col-sm-12 col-xl-12 col-md-12 col-lg-12">
+					<label>Cantidad </label>
+						<input type="number" required name="cantidad" ng-model="cantidad" min="1" max="20" placeholder="Escribe la cantidad de códigos a generar" >
+						<div ng-messages="formularioForm.cantidad.$error">
+							<div ng-message="required">Este campo es requerido.</div>
+							<div ng-message="min">Mínimo 1 código a generar.</div>
+							<div ng-message="max">Máximo 20 códigos a generar.</div>
+						</div>
+					</md-input-container>
+
+				</form>
+
+			</div>
+
+		</md-dialog-content>
+
+		<md-dialog-actions layout="row">
+
+			<md-button ng-click="hide()" class="{{ocultarCancel}} cancelar">
+				Cancelar
+			</md-button>
+
+			<md-button  ng-click="crear()" class="aceptar" ng-disabled="!(formularioForm.$valid)" >
+				crear
+			</md-button>
+		</md-dialog-actions>
+
+	</md-dialog>
+
+</div>

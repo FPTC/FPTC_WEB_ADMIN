@@ -1,0 +1,123 @@
+
+<div class="titulo" >
+	<h1 ng-model="user" class="tituloPrincipal visible fadeIn">I.P.S {{nombreESE}}</h1>
+</div>
+
+
+<section style="background-color:white;height:calc(100%); display: inherit; width: 100vw;" >
+
+	<a  href="../#/parametros/ese/{{atras}}"  class="aceptar" style="position: absolute; margin-top: calc(50vh - 141px); z-index: 59; width: 50px !important; height: 50px; border-radius: 0px 50% 50% 0px; min-width: 50px !important; margin-left: 0px; padding: 13px !important;" >
+
+		<i style="font-size:24px;" class="fa fa-arrow-circle-left ng-scope" aria-hidden="true"></i>
+	</a>
+
+	<div ng-model="displayForm" id="cierpoInicio" style="display: {{displayForm}};">
+
+		<div class="cuerpo" style="height: 100%;">
+			
+			<div class="seccionCuerpo noVisible" style="height: 100%;" id="datos">
+
+				<md-content  style=" background-color: white; overflow-x: hidden; height: 100%;">
+
+					<div class="cuerpoAplicacion" style="display:inline-block; width:100% !important; margin-left:0px !important;">
+
+						<md-toolbar class="md-hue-2" style="width: 80%; margin-left: 10%; margin-top: 10px; background-color: white !important">
+
+							<div class="md-toolbar-tools">
+								<i class="fa fa-search middleIcon iconoSearch" aria-hidden="true"></i> 
+								<form name="filter.form" class="barraSearch">
+									<input ng-model="query.filter" type="text" class="inputSearch" placeholder="Buscar en esta tabla..."  >
+								</form>
+
+							</div>
+						</md-toolbar>
+						
+						<div id="contenedorTabla" class="" style="width:80% !important; margin-left:10% !important;">
+
+							<md-table-container style="" >   
+
+								<table md-table  ng-model="selected" md-progress="promise">
+									<thead md-head md-order="query.order" md-on-reorder="reordenar">
+										<tr md-row>
+											<th md-column md-order-by="name"><span>Nombre</span></th>
+
+											<th md-column class="centered" ><span>Acciones</span></th>
+										</tr>
+									</thead>
+									<tbody md-body style="height: 500px !important;max-height: 500px !important;">
+										<tr md-row md-select="false" md-select-id="name" class="animate"   ng-repeat="ips in ipss | orderBy: query.order  | limitTo: query.limit : (query.page -1) * query.limit | filter: query.filter ">
+
+											<td md-cell style="">{{ips.name}}</td>
+
+											<td md-cell class="centered">
+
+												<md-button ng-click="editarIPS($event, ips)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+													<md-tooltip md-direction="bottom">
+														Editar
+													</md-tooltip>
+													<i class="fa fa-pencil middleIcon" style="min-width:0px !important;color:#4fd467;" aria-hidden="true"></i> 
+												</md-button>
+
+												<md-button ng-click="eliminarIPS($event, ips)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+													<md-tooltip md-direction="bottom">
+														Eliminar	
+													</md-tooltip>
+													<i class="fa fa-trash middleIcon" style="min-width:0px !important;color:#ff2700;" aria-hidden="true"></i> 
+												</md-button>
+
+											</td>
+										</tr>
+									</tbody>
+								</table>
+
+							</md-table-container>
+
+							<md-table-pagination ng-model="ipss" md-limit="query.limit" md-limit-options="[10, 50, 100]" md-page="query.page"  md-total="{{ipss.length}}" md-label="{page: 'Página:', rowsPerPage: 'Filas por página:', of: 'de'}" md-on-paginate="logPagination" md-page-select></md-table-pagination>
+
+						</div>
+
+					</div>
+
+				</md-content>
+
+				<button ng-if="perfil == 0" class="md-fab md-button md-ink-ripple btnAdicionarUsuario" type="button"  ng-click="crearIPS($event)">
+					<i style="font-size:24px;" class="fa fa-plus  ng-scope" aria-hidden="true"></i>
+					<div class="md-ripple-container"></div>
+				</button>
+
+			</div>
+
+			<div class="seccionCuerpo noVisible" style="height: 100%;" id="sinDatos">
+				<md-content  style=" background-color: white; overflow-x: hidden; height: 100%;">
+
+					<div class="gridi" style=" width:100% !important;height: 100%; margin-left:0px !important;">
+						<h3 class="mauto">Recurso no encontrado.</h3>
+					</div>
+
+				</md-content>
+			</div>
+
+
+			<div class="seccionCuerpo noVisible" style="height: 100%;"  id="precarga">
+				<md-content  style=" background-color: white; overflow-x: hidden; height: 100%;">
+
+					<div class="gridi" style=" width:100% !important;height: 100%; margin-left:0px !important;">
+						<h3 class="mauto">Recurso no encontrado.</h3>
+					</div>
+
+				</md-content>
+
+			</div>
+
+		</div> 
+
+	</div> 
+
+
+
+</section>
+
+<div class="foot" style="height: 45px; width: 100%; background-color: #ff6390; color: white;">
+	<p style="text-align: center;">Todos los derechos reservados | Ámate | 2017</p>
+</div>
+

@@ -1,0 +1,43 @@
+
+<div class="modalMediano" style="widows: 500px;">
+
+	<md-dialog class="modalDialog" style="padding: 0px 30px;">
+
+		<h2 style="" class="tituloModal" >Paciente por tamizar</h2>
+
+		<md-dialog-content style="min-height: inherit;">
+
+			<form name="formularioForm" style="margin-top: 0px !important;">
+
+
+				<md-input-container flex="100" class="col-sm-12 col-xl-12 col-md-12 col-lg-12">
+
+					<md-select ng-model="motivoSeleccionado" name="motivo" id="motivo" required placeholder="Motivo" class="md-no-underline">
+						<md-option ng-repeat="motivo in motivoActual.motivos" ng-if="motivo.tipo == tipoMotivo || motivo.tipo == 'a'" ng-value="motivo.id">{{motivo.nombre}}</md-option>
+					</md-select>
+
+					<div ng-messages="formularioForm.motivo.$error">
+						<div ng-message="required">Este campo es requerido.</div>
+						<div ng-message="pattern">No se admiten números ni caracteres no alfabeticos.</div>
+					</div>
+
+				</md-input-container>
+
+			</form>
+
+		</md-dialog-content>
+
+		<md-dialog-actions layout="row">
+
+			<md-button ng-click="cancelarRegistro()" class="{{ocultarCancel}} cancelar">
+				Cancelar
+			</md-button>
+
+			<md-button  ng-click="guardarRegistro()" class="aceptar" ng-disabled="!(formularioForm.$valid)" >
+				Registrar
+			</md-button>
+		</md-dialog-actions>
+
+	</md-dialog>
+
+</div>

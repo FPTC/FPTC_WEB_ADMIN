@@ -22,7 +22,7 @@
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-material-data-table/0.10.10/md-data-table.css" />
 
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.1.4/angular-material.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.1.8/angular-material.css" />
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
 	<!-- module -->
@@ -64,6 +64,7 @@
 					<i style="font-size:24px;" class="fa fa-navicon " aria-hidden="true"></i>
 				</md-button>
 			-->
+
 
 		</md-toolbar>
 
@@ -115,6 +116,49 @@
 				</div>
 			</a>
 
+			<a class="md-button seccionMenu" md-ink-ripple="#fffffff" ng-show="perfil == 0" ng-click="goSeccion('parametros')" >
+				<div>			
+					<i  style="font-size:20px;" class="fa fa-sitemap iconSeccionMenu " aria-hidden="true"></i>
+					<span >
+						Parámetros
+					</span>
+				</div>
+			</a>
+
+
+			<a class="md-button seccionMenu" md-ink-ripple="#fffffff" ng-show="perfil == 0" ng-click="goSeccion('codigos')" >
+				<div>			
+					<i  style="font-size:20px;" class="fa fa-barcode iconSeccionMenu " aria-hidden="true"></i>
+					<span>
+						Códigos de canje
+					</span>
+				</div>
+			</a>
+
+
+
+
+			<a class="md-button seccionMenu" md-ink-ripple="#fffffff" ng-show="perfil == 0" ng-click="goSeccion('filtrosMamografia')" style="    background: #ff6290 !important;color: white;">
+				<div>			
+					<i  style="font-size:20px;" class="fa fa-filter iconSeccionMenu " aria-hidden="true"></i>
+					<span >
+						Filtros Mamografía
+					</span>
+				</div>
+			</a>
+
+			<a class="md-button seccionMenu" md-ink-ripple="#fffffff" ng-show="perfil == 0" ng-click="goSeccion('filtrosCitologia')" style="background: #009996 !important;color: white;" >
+				<div>			
+					<i  style="font-size:20px;" class="fa fa-filter iconSeccionMenu " aria-hidden="true"></i>
+					<span >
+						Filtros Citología
+					</span>
+				</div>
+			</a>
+
+
+
+
 
 			<a class="md-button seccionMenu movil" md-ink-ripple="#fffffff" ng-click="logOut()" >
 				<div>
@@ -134,7 +178,7 @@
 
 		</div>
 
-		<div style="bottom: 20px;  " class="footNav">
+		<div style="bottom: 20px; display: none " class="footNav">
 			<a href="http://leadis.co/" target="_blank">
 				<img style="width:50%; margin-left: 25%; " src="img/powered-leadis-gris.png">
 			</a>
@@ -154,6 +198,20 @@
 				" aria-label="Comment">
 				<i style="font-size:24px;" class="fa fa-navicon " aria-hidden="true"></i>
 			</md-button>
+
+			<div class="raizBox" style="display: none;">
+
+				<div style="display: {{prueba.botonAmpliacion}};">
+
+					<div ng-repeat="nombre in raiz track by $index" class="lineBlock">
+						<a class="raizObjeto"  ng-click="cambioRaiz($index)">{{nombre}}</a>	
+						<a class="raizObjeto" >/</a>
+					</div>
+
+
+				</div>
+
+			</div>
 
 		</div>
 
@@ -226,10 +284,11 @@
 
 
 <!-- Angular Material Library -->
-<script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.8/angular-material.min.js"></script>
 
 
 <script type="text/javascript" src="js/componentesJS/angular-route.js"></script>
+<script type="text/javascript" src="js/componentesJS/moment.js"></script>
 <script type="text/javascript" src="js/AngularJS/app.js"></script>
 
 <!-- NG -->
@@ -261,12 +320,20 @@
 <script type="text/javascript" src="js/AngularJS/loginMain/controller.js"></script>
 <script type="text/javascript" src="js/AngularJS/loginMain/edicionController.js"></script>
 <script type="text/javascript" src="js/AngularJS/webMain/controller.js"></script>
+<script type="text/javascript" src="js/AngularJS/webMain/factory.js"></script>
 <script type="text/javascript" src="js/AngularJS/preguntasMain/controller.js"></script>
 <script type="text/javascript" src="js/AngularJS/preguntasMain/detalleCervixController.js"></script>
 <script type="text/javascript" src="js/AngularJS/preguntasMain/detalleSenoController.js"></script>
 <script type="text/javascript" src="js/AngularJS/usuariosMain/controllers.js"></script>
+<script type="text/javascript" src="js/AngularJS/usuariosMain/filtros.js"></script>
 <script type="text/javascript" src="js/AngularJS/estadisticasMain/estadisticas.js"></script>
 <script type="text/javascript" src="js/AngularJS/datosMain/datos.js"></script>
+<script type="text/javascript" src="js/AngularJS/parametrosMain/parametros.js"></script>
+<script type="text/javascript" src="js/AngularJS/parametrosMain/ciudades.js"></script>
+<script type="text/javascript" src="js/AngularJS/parametrosMain/comunas.js"></script>
+<script type="text/javascript" src="js/AngularJS/parametrosMain/ese.js"></script>
+<script type="text/javascript" src="js/AngularJS/parametrosMain/ips.js"></script>
+<script type="text/javascript" src="js/AngularJS/codigosMain/codigos.js"></script>
 
 <script type="text/javascript" src="credentials/credential.js"></script>
 

@@ -3,10 +3,28 @@
 	var app = angular.module('usuariosControllers' , ['angular.morris' ,'ngMaterial', 'ngMessages' , 'md.data.table' , 'ngAnimate', 'funcancer' ,'firebase', 'md.time.picker' ])
 
 
+	.controller('usuariosMainController' , function ($scope ,$filter , serviceDatos, $mdDialog, $mdMedia, $location , registrarCliente, $firebaseAuth, $mdToast,  $timeout , $mdSidenav,transacciones ) {
 
 
-	.controller('usuariosMainController' , function ($scope  , serviceDatos, $mdDialog, $mdMedia, $location , registrarCliente, $firebaseAuth, $mdToast,  $timeout , $mdSidenav,transacciones ) {
+		$scope.filtrarTodo = function(){
+			console.log("filtrando");
+			console.log($scope.query.filter);
+			var data = $filter('filter')($scope.copiaUsuarios,$scope.query.filter, false, ['name', 'email','neighborhood','dateCreated', 'lastName'])
 
+			$scope.usuarios = data;
+
+			console.log($scope.usuarios);
+			console.log(data);
+		}
+
+
+
+		$scope.pendiente = [];
+		$scope.sinIndicacion = [];
+		$scope.excluidas = [];
+		$scope.porTamizar = [];
+		$scope.tamizado = [];
+		$scope.opcionesTabla = [50, 100, 200]
 
 		var last = {
 			bottom: false,
@@ -38,8 +56,6 @@
 			last = angular.extend({},current);
 		}
 
-
-
 		$scope.calcularEdad =  function (birthday) {
 			var edad;
 			if(birthday != undefined && birthday!= ""){
@@ -58,8 +74,8 @@
 		$scope.selected=[];
 		$scope.query = {
 			"filter":"",
-			"order": 'firstLastName',
-			"limit": 10,
+			"order": '',
+			"limit": 50,
 			"page": 1
 		};
 
@@ -77,9 +93,7 @@
 
 		$scope.generar = function(){
 
-			serviceDatos.default($scope.usuario.email).then(function(respuesta){
-				
-
+			serviceDatos.default($scope.usuario.email).then(function(respuesta){			
 
 				var pinTo = $scope.getToastPosition();
 				var toast = $mdToast.simple()
@@ -96,14 +110,230 @@
 					}
 				});  
 
-
-
 			});
 			
+		}
+
+		$scope.motivos = [];
+		var llegada = firebase.database().ref('filtros'). once('value').then(function(datos){
+			var motivos = datos.val();
+
+			for(motivo in motivos){
+				$scope.motivos.push(motivos[motivo])
+			}
+			console.log($scope.motivos);
+		});
+
+		$scope.verHistorial = function(ev, historial){
+
+			$scope.queryh = {
+				"filter":"",
+				"order": '',
+				"limit": 50,
+				"page": 1
+			};
+
+			var historial = historial;
+			console.log(historial);
+
+			//ajuste del historial para que pueda ser un array que permita el ordenado
+
+			$scope.historial = [];
+			for(registro in historial){
+				console.log( new Date(historial[registro].fecha ));
+				$scope.historial.push(historial[registro]);
+			}
+
+			console.log($scope.historial);
+
+			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
+
+			$mdDialog.show({
+				controller: 'historialController',
+				templateUrl: 'views/usuarios/filtros/historial.html',
+				parent: angular.element(document.body),
+				targetEvent: ev,
+				clickOutsideToClose:false,
+				fullscreen: useFullScreen,
+				scope:$scope,
+				preserveScope: true,
+			})
+			.then(function(answer) {
+
+			}, function() {
+
+			});
+			$scope.$watch(function() {
+				return $mdMedia('xs') || $mdMedia('sm');
+			}, function(wantsFullScreen) {
+				$scope.customFullscreen = (wantsFullScreen === true);
+			});
 
 		}
 
+		$scope.registrarMotivoMamografia = function(ev, id, usuario, actual, key, tipo, usuarioCompleto, origen, index){
 
+			console.log(id);
+			$scope.indicacionActual = actual;
+			$scope.usuarioActual = usuario;
+			$scope.indicacionNueva = id;
+
+			$scope.usuarioCompleto = usuarioCompleto;
+
+			console.log(usuarioCompleto);
+
+			$scope.tipoMotivo = tipo; //para mamografia
+			$scope.tmporigen = origen;
+			$scope.tmpindex = index
+
+			$scope.cancelarRegistro = function(){
+
+				console.log($scope.tmporigen, $scope.tmpindex);
+
+				if($scope.tipoMotivo=="m"){
+					
+					$scope.usuarios[$scope.tmpindex].lastIndicationBreast = actual;		
+				}
+				else{
+					
+					$scope.usuarios[$scope.tmpindex].lastIndicationCervix = actual;		
+				}
+				
+				$mdDialog.hide();
+			}
+
+
+			console.log($scope.motivos);
+
+			//sin motivo
+			if(id==1){
+				var id = new Date().getTime();
+				var historial = $scope.tipoMotivo == 'm' ? "historialIndicacionesMamografia" : "historialIndicacionesCitologia";
+
+				var send = { id: id, fecha: id, idFiltro: $scope.indicacionNueva , idMotivo : false };
+
+				var send2 = $scope.tipoMotivo == 'm' ? { lastIndicationBreast : $scope.indicacionNueva, lastReasonBreast : false } : { lastIndicationCervix : $scope.indicacionNueva, lastReasonCervix : false };
+
+
+				$scope.motivoActual = $scope.motivos[0];
+
+				var confirm = $mdDialog.confirm()
+				.title('Registrar Sin indicación')
+				.textContent('Esta indicación no necesita un motivo')
+				.ariaLabel('motivo')
+				.targetEvent(ev)
+				.ok('Guardar')
+				.cancel('Cancelar');
+
+				
+
+				$mdDialog.show(confirm).then(function() {
+					
+					firebase.database().ref("usuarios/"+$scope.usuarioActual+"/"+historial+"/"+id).set( send ).then(function(administracion){
+					});
+
+					//una vez realizado el registro, se procede a guardar los valores primerios (para no tener que entrar al final del historial)
+					firebase.database().ref("usuarios/"+$scope.usuarioActual).update( send2 ).then(function(administracion){
+						$scope.mensajes.parentProperty("Registro realizado satisfactoriamente.", "Aceptar", 3000);
+						$mdDialog.hide();
+						$scope.consultar.parentProperty();
+					});
+
+
+
+				}, function() {
+					$scope.usuarios[key].lastIndication = actual;
+					$mdDialog.hide();
+				});
+
+			}
+			else if(id==2){
+
+				$scope.motivoActual = $scope.motivos[1];
+
+
+				var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
+
+				$mdDialog.show({
+					controller: 'excluidaController',
+					templateUrl: 'views/usuarios/filtros/excluida.html',
+					parent: angular.element(document.body),
+					targetEvent: ev,
+					clickOutsideToClose:false,
+					fullscreen: useFullScreen,
+					scope:$scope,
+					preserveScope: true,
+				})
+				.then(function(answer) {
+
+				}, function() {
+
+				});
+				$scope.$watch(function() {
+					return $mdMedia('xs') || $mdMedia('sm');
+				}, function(wantsFullScreen) {
+					$scope.customFullscreen = (wantsFullScreen === true);
+				});
+
+			}
+			else if(id==3){
+
+				$scope.motivoActual = $scope.motivos[2];
+
+				var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
+
+				$mdDialog.show({
+					controller: 'tamizadoController',
+					templateUrl: 'views/usuarios/filtros/porTamizar.html',
+					parent: angular.element(document.body),
+					targetEvent: ev,
+					clickOutsideToClose:false,
+					fullscreen: useFullScreen,
+					scope:$scope,
+					preserveScope: true,
+				})
+				.then(function(answer) {
+
+				}, function() {
+
+				});
+				$scope.$watch(function() {
+					return $mdMedia('xs') || $mdMedia('sm');
+				}, function(wantsFullScreen) {
+					$scope.customFullscreen = (wantsFullScreen === true);
+				});
+
+			}
+			else if(id==4){
+
+				$scope.motivoActual = $scope.motivos[3];
+
+
+				var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
+
+				$mdDialog.show({
+					controller: 'tamizadoController',
+					templateUrl: 'views/usuarios/filtros/tamizado.html',
+					parent: angular.element(document.body),
+					targetEvent: ev,
+					clickOutsideToClose:false,
+					fullscreen: useFullScreen,
+					scope:$scope,
+					preserveScope: true,
+				})
+				.then(function(answer) {
+
+				}, function() {
+
+				});
+				$scope.$watch(function() {
+					return $mdMedia('xs') || $mdMedia('sm');
+				}, function(wantsFullScreen) {
+					$scope.customFullscreen = (wantsFullScreen === true);
+				});
+			}
+
+		}
 
 		var es=firebase.auth().onAuthStateChanged(function(user) {
 
@@ -114,20 +344,15 @@
 
 
 
-					firebase.database().ref('usuarios/'+user.uid).once('value').then(function(usuario) {
-						$scope.usuario = usuario.val();
+					// firebase.database().ref('usuarios/'+user.uid).once('value').then(function(usuario) {
+					// 	$scope.usuario = usuario.val();
 
-						
-					});
+					// });
 
 
 					if(datos.val() !== null){
 
 						$scope.perfil = datos.val().profile;
-				
-
-
-
 						
 						$scope.cambiarEstado();
 
@@ -157,11 +382,7 @@
 							}, function(wantsFullScreen) {
 								$scope.customFullscreen = (wantsFullScreen === true);
 							});
-
-
 						}
-
-
 
 
 						$scope.entregarPremioExamenBreast = function (ev, usuario){
@@ -190,7 +411,6 @@
 							}, function(wantsFullScreen) {
 								$scope.customFullscreen = (wantsFullScreen === true);
 							});
-
 
 						}
 
@@ -222,13 +442,7 @@
 								$scope.customFullscreen = (wantsFullScreen === true);
 							});
 
-
 						}
-
-
-
-
-
 
 						$scope.detalleUsuario = function(ev, usuario) {
 
@@ -290,6 +504,27 @@
 						}
 
 
+						$scope.reinicioIntentosFallidos = function(ev, uid) {
+
+							var confirm = $mdDialog.confirm()
+							.title('Reiniciar intentos fallidos')
+							.textContent('Esto le permitirá a la usuaria realizar 3 intentos de canje de códigos.')
+							.ariaLabel('codes')
+							.targetEvent(ev)
+							.ok('Reinicar')
+							.cancel('Cancelar');
+
+							$mdDialog.show(confirm).then(function() {
+
+								firebase.database().ref('usuarios/' +uid).update({'failedTries' : null}).then(function(reinicio){
+									$scope.mensajes.parentProperty("Intentos fallidos reiniciados. Recarga la página para ver los cambios.", "Aceptar", 3000);
+									$mdDialog.hide();
+								});
+
+							}, function() {
+								
+							});
+						};
 
 
 						$scope.respuestasUsuarioCervix = function(ev, usuario) {
@@ -413,82 +648,157 @@
 							return formatedDate;
 						}
 
+						$scope.arrayquer = function (array) {
+							var ary = [];
+							var ii = 0;
+							console.log(array)
+							angular.forEach(array, function (val, key) {
+
+								if(typeof val.dateCreated !== "undefined"){
+									val.uid = key
+
+									val.milliseconds = parseInt(moment(val.dateCreated, "DD/MM/YYYY").format('x') )
+									ary.push(val);
+									ii++
+								}
+								
+							});
+							
+
+							return ary;
+						};
+
+
 
 						$scope.consultar.parentProperty = function (){
+
+							$scope.pendiente = [];
+							$scope.sinIndicacion = [];
+							$scope.excluidas = [];
+							$scope.porTamizar = [];
+							$scope.tamizado = [];
 
 							firebase.database().ref("usuarios").once('value' , function(llegada) {
 
 								$scope.usuarios=[];
 								$scope.cantidadUsuarios=0;
 
-								for(usuario in llegada.val()){
+								//limite
+								var i = 0;
 
-									var temporal =  llegada.val()[usuario];
-									temporal["uid"] = usuario;
-									
+								// for(usuario in llegada.val()){
 
-									if(llegada.val()[usuario].state == 0 && llegada.val()[usuario].profileCompleted != 1){
-										temporal["textoEstado"] = "Cuenta creada";
+								// 	if( typeof llegada.val()[usuario].dateCreated !== "undefined" ){
+								// 		$scope.usuarios.push( llegada.val()[usuario] );
+								// 		$scope.usuarios[$scope.usuarios.length - 1].uid = usuario;
+								// 		$scope.usuarios[$scope.usuarios.length - 1].mainIndex = i;
 
-									} 
+								// 		$scope.usuarios[$scope.usuarios.length - 1].milliseconds = parseInt(moment($scope.usuarios[$scope.usuarios.length - 1].dateCreated, "DD/MM/YYYY").format('x') )
 
+								//  //	$scope.usuarios[$scope.usuarios.length - 1].puntos= llegada.val()[usuario].pointsBreast + llegada.val()[usuario].pointsCervix;
 
-									if(llegada.val()[usuario].profileCompleted == 1 && llegada.val()[usuario].state == 0){
-										temporal["textoEstado"] = "Perfil completado";
+								//  	//$scope.usuarios[$scope.usuarios.length - 1].edad=$scope.calcularEdad(llegada.val()[usuario].dateBirthday);
 
-									} 
+								//  	//$scope.usuarios[$scope.usuarios.length - 1].fechaCreado =  Date.parse($scope.date( ""+llegada.val()[usuario].dateCreated ,"dd/mm/yyyy","/") );
+								//  	i++;
+								//  }
 
-									if(llegada.val()[usuario].state == 1){
-										temporal["textoEstado"] = "Test Iniciado";
+								// }
 
-									} 
+								//se convierte en array
+								$scope.usuarios = $scope.arrayquer(llegada.val());
+								
+								console.log($scope.usuarios)
 
-									if(llegada.val()[usuario].state == 2 && llegada.val()[usuario].repetitionsAnswersBreast>0 && llegada.val()[usuario].repetitionsAnswersCervix>0){
-										temporal["textoEstado"] = "Test completado";
+								//se eliminan los que estan con fecah de creacion vacia
+								
+								
+								$scope.usuarios = $scope.usuarios.sort(function(a, b) { return a.milliseconds - b.milliseconds })
 
-									} 
-
-									if(llegada.val()[usuario].state == 2 && (llegada.val()[usuario].repetitionsAnswersBreast==0 || llegada.val()[usuario].repetitionsAnswersCervix==0)){
-										temporal["textoEstado"] = "Test Iniciado";
-
-									} 
-
-									if(llegada.val()[usuario].state == 3){
-										temporal["textoEstado"] = "Premio entregado";
-
-									} 
-
-									if("appointment" in llegada.val()[usuario]){
-										
-
-										if(llegada.val()[usuario].appointment==true){
-
-											temporal["cita"]="Si";
-
-										}	
-										else{
-											temporal["cita"]="No";
-										}
-									}
-									else{
-										temporal["cita"]="N/A";
-									}
-
-									temporal["puntos"]= llegada.val()[usuario].pointsBreast + llegada.val()[usuario].pointsCervix;
-
-									temporal["edad"]=$scope.calcularEdad(llegada.val()[usuario].dateBirthday);
-
-									temporal["fechaCreado"] =  Date.parse($scope.date( ""+llegada.val()[usuario].dateCreated ,"dd/mm/yyyy","/") );
-
-									
-									$scope.usuarios[$scope.cantidadUsuarios] = temporal;
-									$scope.cantidadUsuarios ++;
-
-
+								var i=0;
+								$scope.usuarios = $scope.usuarios.map(function(x){								
+									x.mainIndex = i
+									i++;
+									return x;
 								}
+								);
 
-								$scope.$apply();
-							});
+								$scope.copiaUsuarios = $scope.usuarios;
+								//$scope.opcionesTabla.push($scope.usuarios.length);
+
+								// for(usuario in llegada.val()){
+
+								// 	var temporal =  llegada.val()[usuario];
+								// 	temporal["uid"] = usuario;
+								// 	temporal["mainIndex"] = i;
+
+
+								// 	if(llegada.val()[usuario].state == 0 && llegada.val()[usuario].profileCompleted != 1){
+								// 		temporal["textoEstado"] = "Cuenta creada";
+
+								// 	} 
+
+
+								// 	if(llegada.val()[usuario].profileCompleted == 1 && llegada.val()[usuario].state == 0){
+								// 		temporal["textoEstado"] = "Perfil completado";
+
+								// 	} 
+
+								// 	if(llegada.val()[usuario].state == 1){
+								// 		temporal["textoEstado"] = "Test Iniciado";
+
+								// 	} 
+
+								// 	if(llegada.val()[usuario].state == 2 && llegada.val()[usuario].repetitionsAnswersBreast>0 && llegada.val()[usuario].repetitionsAnswersCervix>0){
+								// 		temporal["textoEstado"] = "Test completado";
+
+								// 	} 
+
+								// 	if(llegada.val()[usuario].state == 2 && (llegada.val()[usuario].repetitionsAnswersBreast==0 || llegada.val()[usuario].repetitionsAnswersCervix==0)){
+								// 		temporal["textoEstado"] = "Test Iniciado";
+
+								// 	} 
+
+								// 	if(llegada.val()[usuario].state == 3){
+								// 		temporal["textoEstado"] = "Premio entregado";
+
+								// 	} 
+
+								// 	if("appointment" in llegada.val()[usuario]){
+
+
+								// 		if(llegada.val()[usuario].appointment==true){
+
+								// 			temporal["cita"]="Si";
+
+								// 		}	
+								// 		else{
+								// 			temporal["cita"]="No";
+								// 		}
+								// 	}
+								// 	else{
+								// 		temporal["cita"]="N/A";
+								// 	}
+
+								// 	temporal["puntos"]= llegada.val()[usuario].pointsBreast + llegada.val()[usuario].pointsCervix;
+
+								// 	temporal["edad"]=$scope.calcularEdad(llegada.val()[usuario].dateBirthday);
+
+								// 	temporal["fechaCreado"] =  Date.parse($scope.date( ""+llegada.val()[usuario].dateCreated ,"dd/mm/yyyy","/") );
+
+
+								// 	$scope.usuarios.push(temporal);
+								// 	$scope.cantidadUsuarios ++;
+
+								// 	i++;
+								// }
+
+								console.log(  new Date () );
+
+								console.log($scope.usuarios);
+
+							//	$scope.$apply();
+						});
 						}
 
 						$scope.consultar.parentProperty();
@@ -636,16 +946,16 @@ else{
 
 	$scope.si = function(){
 		$scope.disableMotivo = true;
-        $scope.agendada.hora = new Date();
+		$scope.agendada.hora = new Date();
 		for(indice in repeat){
 
 			$scope.agendada[repeat[indice]] = false;
-		
+
 
 
 		}
 
-	
+
 	}
 
 	var repeat = ["noContesta", "noQuiere", "equivocado", "noDisponible", "noAplica"];
@@ -654,7 +964,7 @@ else{
 	$scope.no = function(){
 		$scope.disableMotivo = false;
 		$scope.agendada.fecha = "";
-        $scope.agendada.hora = "";
+		$scope.agendada.hora = "";
 	}
 
 	$scope.unmark = function(name){
@@ -666,7 +976,7 @@ else{
 		for(indice in repeat){
 			if(name !== indice){
 				$scope.agendada[repeat[indice]] = false;
-			
+
 			}
 
 		}
@@ -693,9 +1003,9 @@ else{
 
 
 		if($scope.disableMotivo == true){
-		
+
 		}else{
-		
+
 		}
 
 
@@ -707,24 +1017,22 @@ else{
 
 
 		if($scope.disableMotivo == true){
-		
+
 
 			if($scope.agendada.fecha !=""){
 
 				$scope.registro = new Date().getTime();
 
-			
-
 				$scope.datosEnvio = {};
 				$scope.datosEnvio.fechaRegistro = (new Date().getDate() )+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear();
-				$scope.datosEnvio.fechaCita = ($scope.agendada.fecha.getDate() )+"/"+($scope.agendada.fecha.getMonth())+"/"+($scope.agendada.fecha.getFullYear());
+				$scope.datosEnvio.fechaCita = ($scope.agendada.fecha.getDate() )+"/"+($scope.agendada.fecha.getMonth()+1)+"/"+($scope.agendada.fecha.getFullYear());
 				$scope.datosEnvio.hora = ($scope.agendada.hora.getHours())+":"+($scope.agendada.hora.getMinutes());
 				$scope.datosEnvio.motivo = "";
 				$scope.datosEnvio.agendada = $scope.agendo;
 				$scope.datosEnvio.realizado = "NO";
 				$scope.datosEnvio.id = $scope.registro;
 
-			
+
 
 
 				firebase.database().ref('citas/' +$scope.usuario.uid+"/breast/"+$scope.registro).update($scope.datosEnvio).then(function(administracion) {
@@ -775,7 +1083,7 @@ else{
 			}
 
 		}else{
-		
+
 
 			if(($scope.agendada.noDisponible != false || $scope.agendada.equivocado !=false || $scope.agendada.noQuiere != false || $scope.agendada.noAplica !=false || $scope.agendada.noContesta!=false ) == true){
 
@@ -791,7 +1099,7 @@ else{
 				$scope.datosEnvio.agendada = "No";
 				$scope.datosEnvio.realizado = "NO";
 				$scope.datosEnvio.id = $scope.registro;
-		
+
 
 
 				firebase.database().ref('citas/' +$scope.usuario.uid+"/breast/"+$scope.registro).update($scope.datosEnvio).then(function(administracion) {
@@ -930,9 +1238,9 @@ else{
 
 	}
 
-    $scope.cambiarTipo = function(key, i){
+	$scope.cambiarTipo = function(key, i){
 
-    	console.log("entro cambiar tipo");
+		console.log("entro cambiar tipo");
 		firebase.database().ref('citas/' +$scope.usuario.uid+"/cervix/"+key).update({'tipo' : $scope.tipo["tipo"+i]}).then(function(administracion){
 
 			var pinTo = $scope.getToastPosition();
@@ -970,16 +1278,16 @@ else{
 	$scope.si = function(){
 		$scope.disableMotivo = true;
 
-        $scope.agendada.hora = new Date();
+		$scope.agendada.hora = new Date();
 		for(indice in repeat){
 
 			$scope.agendada[repeat[indice]] = false;
-	
+
 
 
 		}
 
-	
+
 	}
 
 	var repeat = ["noContesta", "noQuiere", "equivocado", "noDisponible", "noAplica"];
@@ -989,7 +1297,7 @@ else{
 		$scope.disableMotivo = false;
 		$scope.agendada.fecha = "";
 		$scope.agendada.hora = "";
-	
+
 	}
 
 	$scope.unmark = function(name){
@@ -1001,7 +1309,7 @@ else{
 		for(indice in repeat){
 			if(name !== indice){
 				$scope.agendada[repeat[indice]] = false;
-			
+
 			}
 
 		}
@@ -1015,7 +1323,7 @@ else{
 		for(indice in repeat2){
 			if(name !== indice){
 				$scope.agendada[repeat2[indice]] = false;
-		
+
 			}
 
 		}
@@ -1028,7 +1336,7 @@ else{
 
 
 		if($scope.disableMotivo == true){
-		
+
 		}else{
 
 		}
@@ -1046,11 +1354,10 @@ else{
 
 				$scope.registro = new Date().getTime();
 
-
 				$scope.datosEnvio = {};
-				$scope.datosEnvio.fechaRegistro = (new Date().getDate() +1)+"/"+(new Date().getMonth() +1)+"/"+new Date().getFullYear();
-				$scope.datosEnvio.fechaCita = ($scope.agendada.fecha.getDate() )+"/"+($scope.agendada.fecha.getMonth())+"/"+$scope.agendada.fecha.getFullYear();
-     			$scope.datosEnvio.hora = ($scope.agendada.hora.getHours())+":"+($scope.agendada.hora.getMinutes());
+				$scope.datosEnvio.fechaRegistro = (new Date().getDate() )+"/"+(new Date().getMonth() +1)+"/"+new Date().getFullYear();
+				$scope.datosEnvio.fechaCita = ($scope.agendada.fecha.getDate() )+"/"+($scope.agendada.fecha.getMonth()+1)+"/"+$scope.agendada.fecha.getFullYear();
+				$scope.datosEnvio.hora = ($scope.agendada.hora.getHours())+":"+($scope.agendada.hora.getMinutes());
 				$scope.datosEnvio.motivo = "";
 				$scope.datosEnvio.agendada = $scope.agendo;
 				$scope.datosEnvio.tipo = "CIT";
@@ -1106,14 +1413,14 @@ else{
 			}
 
 		}else{
-		
+
 
 			if(($scope.agendada.noDisponible != false || $scope.agendada.equivocado !=false || $scope.agendada.noQuiere != false || $scope.agendada.noAplica !=false || $scope.agendada.noContesta!=false ) == true){
 
 
 				$scope.registro = new Date().getTime();
 
-			
+
 
 				$scope.datosEnvio = {};
 				$scope.datosEnvio.fechaRegistro = (new Date().getDate() )+"/"+(+new Date().getMonth() +1)+"/"+new Date().getFullYear();
@@ -1216,7 +1523,7 @@ else{
                         		$scope.preguntas = preguntas.val();
                         		$scope.iniciar();
                         	});
-                        
+
 
                         }else{
                         	var data = firebase.database().ref("preguntas/breastCancer").once('value' , function(preguntas) {
@@ -1241,7 +1548,7 @@ else{
 
                             var indiceActual = 0;
 
-                        
+
 
 
                             $scope.recursiva = function (){
@@ -1251,6 +1558,8 @@ else{
                                 if($scope.cantidadPreguntas > indiceActual){
 
                                     //es necesario revisar si el usuario admin actual puede ver la pregunta
+
+                                    console.log($scope.usuario);
 
                                     firebase.database().ref("respuestas/breastCancer/"+$scope.arrayIndices[indiceActual]).orderByChild("uid").equalTo($scope.usuario.uid).once('value' , function(respuesta) {
 
@@ -1311,7 +1620,7 @@ else{
                                 else{
                                     //se ha terminado el array, o no hay preguntas
 
-                          
+
                                     $scope.respuestasMostrar=$scope.respuestas;
 
                                     document.getElementById("cargandoRespuestas").classList.remove("visible");
@@ -1381,14 +1690,14 @@ else{
                         		$scope.preguntas = preguntas.val();
                         		$scope.iniciar();
                         	});
-                        
+
 
                         }else{
                         	var data = firebase.database().ref("preguntas/cervixCancer").once('value' , function(preguntas) {
                         		$scope.preguntas = preguntas.val();
                         		$scope.iniciar();
                         	});
-                     
+
                         }   
 
 
@@ -1406,7 +1715,7 @@ else{
 
                             var indiceActual = 0;
 
-                          
+
 
 
                             $scope.recursiva = function (){
@@ -1472,7 +1781,7 @@ else{
                                 else{
                                     //se ha terminado el array, o no hay preguntas
 
-                        
+
                                     $scope.respuestasMostrar=$scope.respuestas;
 
                                     document.getElementById("cargandoRespuestas").classList.remove("visible");
@@ -1609,7 +1918,7 @@ else{
 
 				return Object.keys($scope.toastPosition)
 				.filter(function(pos) {
-			
+
 					return $scope.toastPosition[pos]; })
 				.join(' ');
 			};
@@ -1685,7 +1994,7 @@ else{
 
 				return Object.keys($scope.toastPosition)
 				.filter(function(pos) {
-				
+
 					return $scope.toastPosition[pos]; })
 				.join(' ');
 			};

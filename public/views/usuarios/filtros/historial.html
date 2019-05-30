@@ -1,0 +1,60 @@
+
+<div class="modalMediano" style="widows: 500px;">
+
+	<md-dialog class="modalDialog" style="padding: 0px 30px;">
+
+		<h2 style="" class="tituloModal">Historial</h2>
+
+		<md-dialog-content style="min-height: inherit;">
+
+			<form name="formularioForm" style="margin-top: 0px !important;">
+
+				<md-toolbar class="md-hue-2" style=" background-color: white !important ; display: none;">
+
+					<div class="md-toolbar-tools">
+						<i class="fa fa-search middleIcon iconoSearch" aria-hidden="true" style="margin-top: 0px !important;"></i> 
+						<form name="filter.form" class="barraSearch">
+							<input ng-model="queryh.filter" type="text" class="inputSearch" placeholder="Buscar en esta tabla..." style="padding-left: 25px;" >
+						</form>
+					</div>
+				</md-toolbar>
+				<div id="contenedorTabla" class="" style="">
+					<md-table-container style="">  
+
+						<table md-table  ng-model="selected">
+							<thead md-head md-order="queryh.order">
+								<tr md-row>
+
+									<th md-column md-order-by="fecha"><span>Fecha</span></th>
+									<th md-column ><span>Indicación</span></th>
+									<th md-column ><span>Motivo</span></th>
+
+								</tr>
+							</thead>
+							<tbody md-body style="height: 500px !important;max-height: 500px !important;">
+								<tr md-row md-select="false" md-select-id="name" class="animate"   ng-repeat="registro in historial | orderBy: queryh.order  | limitTo: queryh.limit : (queryh.page -1) * queryh.limit | filter: queryh.filter ">
+									
+									<td md-cell style="">{{ fechaNumerica(registro.fecha) }}</td>
+									<td md-cell style="">{{ motivos[registro.idFiltro - 1].name }}</td>
+									<td md-cell style="">{{ motivos[registro.idFiltro - 1].motivos[registro.idMotivo].nombre }}</td>
+
+								</tr>
+							</tbody>
+						</table>
+					</md-table-container>
+
+					<md-table-pagination ng-model="historial" md-limit="queryh.limit" md-limit-options="[10, 50, 100]" md-page="queryh.page"  md-total="{{historial.length}}" md-label="{page: 'Página:', rowsPerPage: 'Filas por página:', of: 'de'}" md-on-paginate="logPagination" md-page-select></md-table-pagination>
+
+				</form>
+
+			</md-dialog-content>
+
+			<md-dialog-actions layout="row">
+				<md-button ng-click="hide()" class="{{ocultarCancel}} cancelar">
+					Cerrar
+				</md-button>
+			</md-dialog-actions>
+
+		</md-dialog>
+
+	</div>

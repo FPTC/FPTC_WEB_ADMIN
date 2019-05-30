@@ -1,0 +1,1403 @@
+
+<div class="titulo" >
+	<h1 ng-model="user" class="tituloPrincipal visible fadeIn">Filtros mamografía</h1>
+</div>
+
+
+<section style="background-color:white;height:calc(100%); display: inherit; width: 100vw;" >
+
+	<div ng-model="displayForm" id="cierpoInicio" style="display: {{displayForm}};">
+
+		<div class="cuerpo" style="height: 100%;">
+			
+			<div class="seccionCuerpo" style="height: 100%;">
+
+				<md-content  style=" background-color: white; overflow-x: hidden; height: 100%;">
+
+
+					<div class="cuerpoAplicacion tabUsuarios" style="display:inline-block; width:100% !important; margin-left:0px !important;">
+
+						<md-tabs md-dynamic-height md-border-bottom style="width: 80%; margin-left: 10%; margin-top: 10px; background-color: white !important">
+							<md-tab label="Pendiente">
+								<md-content class="md-padding">
+									<md-toolbar class="md-hue-2" >
+										<div class="md-toolbar-tools">
+											<i class="fa fa-search middleIcon iconoSearch" aria-hidden="true"></i> 
+											<form name="filter.form" class="barraSearch">
+												<input ng-model="query.filter.filterPendiente" ng-change="filterPendiente()" type="text" class="inputSearch" placeholder="Buscar en esta tabla..."  >
+											</form>
+										</div>
+									</md-toolbar>
+									<div id="contenedorTabla" class="" >
+
+
+										<md-table-container style="" >   
+
+											<table md-table  ng-model="selected" md-progress="promise">
+												<thead md-head md-order="query.order" md-on-reorder="reordenar">
+													<tr md-row>
+														<th md-column md-order-by="name"><span>Nombre</span></th>
+														<th md-column ><span>Puntos</span></th>
+														<th md-column md-order-by="milliseconds"><span>Fecha creación</span></th>
+														<th md-column ><span>Edad</span></th>
+														<th md-column ><span>Estado</span></th>
+														<th md-column md-order-by="appointment"">Desea ser contactada</th>
+														<th md-column md-numeric style="width:30% !important;text-align: center;">Acciones disponibles</th>
+														<th md-column ><span>Agenda mamografía</span></th>
+														<th md-column ><span>Agenda citología</span></th>
+														<th md-column ><span>Filtros Mamografía</span></th>
+														<th md-column ><span>Especificación Mamografía</span></th>
+														<th md-column ><span>Historial</span></th>
+													</tr>
+												</thead>
+												<tbody md-body style="height: 500px !important;max-height: 500px !important;">
+													<tr md-row md-select="false" md-select-id="name" class="animate"   ng-repeat="usuarioPendiente in pendiente | orderBy: query.order  | limitTo: query.limit : (query.page -1) * query.limit ">
+
+
+														<td md-cell style="">{{usuarioPendiente.name}} {{usuarioPendiente.lastName}}</td>
+														<td md-cell style="">{{usuarioPendiente.pointsCervix + usuarioPendiente.pointsBreast}}</td>
+														<td md-cell style="">{{usuarioPendiente.dateCreated}}</td>
+														<td md-cell style="">{{calcularEdad(usuarioPendiente.dateBirthday)}}</td>
+
+
+														<td  md-cell style="">
+															<div ng-if="usuarioPendiente.state == 0 && usuarioPendiente.profileCompleted != 1">
+																Cuenta creada
+															</div>
+															<div ng-if="usuarioPendiente.profileCompleted == 1 && usuarioPendiente.state == 0">
+																Perfil completado
+															</div>
+															<div ng-if="usuarioPendiente.state == 1">
+																Test Iniciado
+															</div>
+															<div ng-if="usuarioPendiente.state == 2 && usuarioPendiente.repetitionsAnswersBreast>0 && usuarioPendiente.repetitionsAnswersCervix>0">
+																Test completado
+															</div>
+															<div ng-if="usuarioPendiente.state == 2 && (usuarioPendiente.repetitionsAnswersBreast==0 ||usuarioPendiente.repetitionsAnswersCervix==0)">
+																Test Iniciado
+															</div>
+															<div ng-if="usuarioPendiente.state == 3">
+																Premio entregado (legado)
+															</div>
+														</td>
+
+
+
+														<td  md-cell >
+															<div ng-if="usuarioPendiente.appointment==true">
+																Si
+															</div>
+
+															<div ng-if="usuarioPendiente.appointment==false">
+																No
+															</div>
+															<div ng-if="usuarioPendiente.appointment==undefined">
+																N/A
+															</div>
+														</td>
+
+
+
+
+														<td md-cell style="width: 30%;text-align: left;">
+
+															<md-button ng-if="usuarioPendiente.profileCompleted==0" ng-click="detalleUsuario($event, usuarioPendiente)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-user middleIcon" style="min-width:0px !important;color:#db2763;" aria-hidden="true"></i> 
+																<md-tooltip md-direction="bottom">
+																	Perfil
+																</md-tooltip>
+															</md-button>
+
+															<md-button ng-if="usuarioPendiente.profileCompleted==1" ng-click="detalleUsuario($event, usuarioPendiente)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-user middleIcon" style="min-width:0px !important;color:#4fd467;" aria-hidden="true"></i> 
+																<md-tooltip md-direction="bottom">
+																	Perfil
+																</md-tooltip>
+															</md-button>
+
+
+
+
+															<md-button ng-click="respuestasUsuarioSeno($event, usuarioPendiente)" ng-if="usuarioPendiente.repetitionsAnswersBreast == 2" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-list middleIcon" style="min-width:0px !important;color:#ff6390; position: absolute" aria-hidden="true"></i> 
+																<i class="fa fa-check middleIcon" style="min-width:0px !important;color:#4fd467; position: inherit;" aria-hidden="true"></i> 
+																<md-tooltip md-direction="bottom">
+																	Respuestas seno
+																</md-tooltip>
+															</md-button>
+
+															<md-button ng-click="respuestasUsuarioSeno($event, usuarioPendiente)" ng-if=" usuarioPendiente.repetitionsAnswersBreast == 1 "  style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-list middleIcon" style="min-width:0px !important;color:#ff6390" aria-hidden="true"></i> 
+
+																<md-tooltip md-direction="bottom">
+																	Respuestas seno
+																</md-tooltip>
+															</md-button>
+
+
+
+
+															<md-button ng-click="respuestasUsuarioCervix($event, usuarioPendiente)" ng-if="usuarioPendiente.repetitionsAnswersCervix == 2" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-list middleIcon" style="min-width:0px !important;color:#009997; position: absolute;" aria-hidden="true"></i> 
+																<i class="fa fa-check middleIcon" style="min-width:0px !important;color:#4fd467; position: inherit;" aria-hidden="true"></i> 
+																<md-tooltip md-direction="bottom">
+																	Respuestas cuello uterino
+																</md-tooltip>
+															</md-button>
+
+															<md-button ng-click="respuestasUsuarioCervix($event, usuarioPendiente)" ng-if=" usuarioPendiente.repetitionsAnswersCervix==1" style="min-width:0px !important;  margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-list middleIcon" style="min-width:0px !important;color:#009997;" aria-hidden="true"></i> 
+																<md-tooltip md-direction="bottom">
+																	Respuestas cuello uterino
+																</md-tooltip>
+															</md-button>
+
+															<md-button  ng-if="usuarioPendiente.repetitionsAnswersCervix == 2 && usuarioPendiente.repetitionsAnswersBreast == 2 && usuarioPendiente.state == 3"  style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Premio entregado
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#4fd467;" aria-hidden="true"></i> 
+															</md-button>
+
+
+															<md-button  ng-if="usuarioPendiente.repetitionsAnswersCervix == 2 && usuarioPendiente.repetitionsAnswersBreast == 2 && usuarioPendiente.state == 2" ng-click="entregarPremio($event, usuarioPendiente)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Entregar premio
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#a30039;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuarioPendiente.examGiftCervix==false" ng-click="entregarPremioExamenCervix($event, usuarioPendiente)" style="color:#009997 ;min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Premio por examen: citología
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#009997;" aria-hidden="true"></i> 
+															</md-button>
+
+
+															<md-button  ng-if="usuarioPendiente.examGiftCervix==true"  style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Premio por examen: citología entregado
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#009997; position: absolute;" aria-hidden="true"></i> 
+																<i class="fa fa-check middleIcon" style="min-width:0px !important;color:#4fd467; position: inherit;" aria-hidden="true"></i> 
+
+															</md-button>
+
+
+															<md-button  ng-if="usuarioPendiente.examGiftBreast==false" ng-click="entregarPremioExamenBreast($event, usuarioPendiente)" style="color:#ff6390;min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Premio por examen: mamografía
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#ff6390;" aria-hidden="true"></i> 
+															</md-button>
+
+
+															<md-button  ng-if="usuarioPendiente.examGiftBreast==true"  style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Premio por examen: mamografía entregado
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#ff6390; position: absolute;" aria-hidden="true"></i> 
+																<i class="fa fa-check middleIcon" style="min-width:0px !important;color:#4fd467; position: inherit;" aria-hidden="true"></i> 
+
+															</md-button>
+
+
+														</td>
+
+														<td md-cell style="width: 5%;text-align: center;">
+															<md-button  ng-if="usuarioPendiente.breastIndication == true && usuarioPendiente.siftingBreast!=true && usuarioPendiente.siftingBreast!=false && usuarioPendiente.lastIndicationBreast != 2" ng-click="agendaSeno($event, usuarioPendiente)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Mamografía
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color:grey;" aria-hidden="true"></i> 
+															</md-button>
+
+
+															<md-button  ng-if="usuarioPendiente.breastIndication == true && usuarioPendiente.siftingBreast==false && usuarioPendiente.lastIndicationBreast != 2" ng-click="agendaSeno($event, usuarioPendiente)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Mamografía
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color:#f5bd3b;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuarioPendiente.breastIndication == true  && usuarioPendiente.siftingBreast==true && usuarioPendiente.lastIndicationBreast != 2" ng-click="agendaSeno($event, usuarioPendiente)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Mamografía
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color:#4fd467;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuarioPendiente.breastIndication == true && usuarioPendiente.lastIndicationBreast == 2" ng-click="agendaSeno($event, usuarioPendiente)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Mamografía
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color: rgb(236, 0, 0)" aria-hidden="true"></i> 
+															</md-button>
+
+														</td>
+														<td md-cell style="width: 5%;text-align: center;">
+
+															<md-button  ng-if="usuarioPendiente.cervixIndication == true && usuarioPendiente.siftingCervix!=true && usuarioPendiente.siftingCervix!=false && usuarioPendiente.lastIndicationCervix != 2" ng-click="agendaCervix($event, usuarioPendiente)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Citología
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color: grey;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuarioPendiente.cervixIndication == true && usuarioPendiente.siftingCervix==false && usuarioPendiente.lastIndicationCervix != 2" ng-click="agendaCervix($event, usuarioPendiente)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Citología
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color:#f5bd3b;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuarioPendiente.cervixIndication == true  && usuarioPendiente.siftingCervix==true && usuarioPendiente.lastIndicationCervix != 2" ng-click="agendaCervix($event, usuarioPendiente)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Citología
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color:#4fd467;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuarioPendiente.lastIndicationCervix == 2 && usuarioPendiente.cervixIndication == true" ng-click="agendaCervix($event, usuarioPendiente)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Citología (Usuaria Excluida con indicación)
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color: rgb(236, 0, 0)" aria-hidden="true"></i> 
+															</md-button>
+
+
+														</td>
+
+														<td md-cell style="">
+
+															<md-select ng-model="usuarioPendiente.lastIndicationBreast" placeholder="Motivo" class="md-no-underline selectNoText">
+																<md-option ng-repeat="motivo in motivos" ng-value="motivo.id" ng-click="registrarMotivoMamografia($event, motivo.id, usuarioPendiente.uid, usuarioPendiente.lastIndicationBreast, usuarioPendiente.mainIndex, 'm', usuarioPendiente, 'pendiente', usuarioPendiente.mainIndex)">{{motivo.name}}</md-option>
+															</md-select>
+														</td>
+
+														<td md-cell style="">
+															{{ motivos[usuarioPendiente.lastIndicationBreast - 1].motivos[usuarioPendiente.lastReasonBreast].nombre }}
+														</td>
+
+
+
+
+
+														<td md-cell class="flexi">
+
+															<md-button  ng-if="usuarioPendiente.historialIndicacionesMamografia" ng-click="verHistorial($event, usuarioPendiente.historialIndicacionesMamografia)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Historial Mamografía
+																</md-tooltip>
+																<i class="fa fa-history middleIcon" style="min-width:0px !important;color:#ff6390;" aria-hidden="true"></i> 
+															</md-button>
+
+
+
+														</td>
+
+													</tr>
+												</tbody>
+											</table>
+										</md-table-container>
+
+										<md-table-pagination ng-model="pendiente" md-limit="query.limit" md-limit-options="[10, 50, 100]" md-page="query.page"  md-total="{{pendiente.length}}" md-label="{page: 'Página:', rowsPerPage: 'Filas por página:', of: 'de'}" md-on-paginate="logPagination" md-page-select></md-table-pagination>
+
+									</div>
+								</md-content>
+							</md-tab>
+							<md-tab label="Sin indicación">
+								<md-content class="md-padding">
+
+									<md-toolbar class="md-hue-2" >
+										<div class="md-toolbar-tools">
+											<i class="fa fa-search middleIcon iconoSearch" aria-hidden="true"></i> 
+											<form name="filter.form" class="barraSearch">
+												<input ng-model="query.filter.filtrarSinIndicacion" ng-change="filtrarSinIndicacion()" type="text" class="inputSearch" placeholder="Buscar en esta tabla..."  >
+											</form>
+										</div>
+									</md-toolbar>
+
+									<div id="contenedorTabla" class="" >
+
+										<md-table-container style="" >   
+
+											<table md-table  ng-model="selected" md-progress="promise">
+												<thead md-head md-order="query.order" md-on-reorder="reordenar">
+													<tr md-row>
+
+														<th md-column md-order-by="name"><span>Nombre</span></th>
+														<th md-column ><span>Puntos</span></th>
+														<th md-column md-order-by="milliseconds"><span>Fecha creación</span></th>
+														<th md-column ><span>Edad</span></th>
+														<th md-column ><span>Estado</span></th>
+														<th md-column md-order-by="appointment"">Desea ser contactada</th>
+														<th md-column md-numeric style="width:30% !important;text-align: center;">Acciones disponibles</th>
+														<th md-column ><span>Agenda mamografía</span></th>
+														<th md-column ><span>Agenda citología</span></th>
+														<th md-column ><span>Filtros Mamografía</span></th>
+														<th md-column ><span>Especificación Mamografía</span></th>
+														<th md-column ><span>Historial</span></th>
+
+													</tr>
+												</thead>
+												<tbody md-body style="height: 500px !important;max-height: 500px !important;">
+													<tr md-row md-select="false" md-select-id="name" class="animate"   ng-repeat="(key, usuario) in sinIndicacion | orderBy: query.order  | limitTo: query.limit : (query.page -1) * query.limit ">
+
+														<td md-cell style="">{{usuario.name}} {{usuario.lastName}}</td>
+														<td md-cell style="">{{usuario.pointsCervix + usuario.pointsBreast}}</td>
+														<td md-cell style="">{{usuario.dateCreated}}</td>
+														<td md-cell style="">{{calcularEdad(usuario.dateBirthday)}}</td>
+
+
+														<td  md-cell style="">
+															<div ng-if="usuario.state == 0 && usuario.profileCompleted != 1">
+																Cuenta creada
+															</div>
+															<div ng-if="usuario.profileCompleted == 1 && usuario.state == 0">
+																Perfil completado
+															</div>
+															<div ng-if="usuario.state == 1">
+																Test Iniciado
+															</div>
+															<div ng-if="usuario.state == 2 && usuario.repetitionsAnswersBreast>0 && usuario.repetitionsAnswersCervix>0">
+																Test completado
+															</div>
+															<div ng-if="usuario.state == 2 && (usuario.repetitionsAnswersBreast==0 ||usuario.repetitionsAnswersCervix==0)">
+																Test Iniciado
+															</div>
+															<div ng-if="usuario.state == 3">
+																Premio entregado (legado)
+															</div>
+														</td>
+
+
+
+														<td  md-cell >
+															<div ng-if="usuario.appointment==true">
+																Si
+															</div>
+
+															<div ng-if="usuario.appointment==false">
+																No
+															</div>
+															<div ng-if="usuario.appointment==undefined">
+																N/A
+															</div>
+														</td>
+
+														<td md-cell style="width: 30%;text-align: left;">
+
+															<md-button ng-if="usuario.profileCompleted==0" ng-click="detalleUsuario($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-user middleIcon" style="min-width:0px !important;color:#db2763;" aria-hidden="true"></i> 
+																<md-tooltip md-direction="bottom">
+																	Perfil
+																</md-tooltip>
+															</md-button>
+
+															<md-button ng-if="usuario.profileCompleted==1" ng-click="detalleUsuario($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-user middleIcon" style="min-width:0px !important;color:#4fd467;" aria-hidden="true"></i> 
+																<md-tooltip md-direction="bottom">
+																	Perfil
+																</md-tooltip>
+															</md-button>
+
+															<md-button ng-click="respuestasUsuarioSeno($event, usuario)" ng-if="usuario.repetitionsAnswersBreast == 2" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-list middleIcon" style="min-width:0px !important;color:#ff6390; position: absolute" aria-hidden="true"></i> 
+																<i class="fa fa-check middleIcon" style="min-width:0px !important;color:#4fd467; position: inherit;" aria-hidden="true"></i> 
+																<md-tooltip md-direction="bottom">
+																	Respuestas seno
+																</md-tooltip>
+															</md-button>
+
+															<md-button ng-click="respuestasUsuarioSeno($event, usuario)" ng-if=" usuario.repetitionsAnswersBreast == 1 "  style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-list middleIcon" style="min-width:0px !important;color:#ff6390" aria-hidden="true"></i> 
+
+																<md-tooltip md-direction="bottom">
+																	Respuestas seno
+																</md-tooltip>
+															</md-button>
+
+															<md-button ng-click="respuestasUsuarioCervix($event, usuario)" ng-if="usuario.repetitionsAnswersCervix == 2" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-list middleIcon" style="min-width:0px !important;color:#009997; position: absolute;" aria-hidden="true"></i> 
+																<i class="fa fa-check middleIcon" style="min-width:0px !important;color:#4fd467; position: inherit;" aria-hidden="true"></i> 
+																<md-tooltip md-direction="bottom">
+																	Respuestas cuello uterino
+																</md-tooltip>
+															</md-button>
+
+															<md-button ng-click="respuestasUsuarioCervix($event, usuario)" ng-if=" usuario.repetitionsAnswersCervix==1" style="min-width:0px !important;  margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-list middleIcon" style="min-width:0px !important;color:#009997;" aria-hidden="true"></i> 
+																<md-tooltip md-direction="bottom">
+																	Respuestas cuello uterino
+																</md-tooltip>
+															</md-button>
+
+															<md-button  ng-if="usuario.repetitionsAnswersCervix == 2 && usuario.repetitionsAnswersBreast == 2 && usuario.state == 3"  style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Premio entregado
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#4fd467;" aria-hidden="true"></i> 
+															</md-button>
+
+
+															<md-button  ng-if="usuario.repetitionsAnswersCervix == 2 && usuario.repetitionsAnswersBreast == 2 && usuario.state == 2" ng-click="entregarPremio($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Entregar premio
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#a30039;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.examGiftCervix==false" ng-click="entregarPremioExamenCervix($event, usuario)" style="color:#009997 ;min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Premio por examen: citología
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#009997;" aria-hidden="true"></i> 
+															</md-button>
+
+
+															<md-button  ng-if="usuario.examGiftCervix==true"  style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Premio por examen: citología entregado
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#009997; position: absolute;" aria-hidden="true"></i> 
+																<i class="fa fa-check middleIcon" style="min-width:0px !important;color:#4fd467; position: inherit;" aria-hidden="true"></i> 
+
+															</md-button>
+
+															<md-button  ng-if="usuario.examGiftBreast==false" ng-click="entregarPremioExamenBreast($event, usuario)" style="color:#ff6390;min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Premio por examen: mamografía
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#ff6390;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.examGiftBreast==true"  style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Premio por examen: mamografía entregado
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#ff6390; position: absolute;" aria-hidden="true"></i> 
+																<i class="fa fa-check middleIcon" style="min-width:0px !important;color:#4fd467; position: inherit;" aria-hidden="true"></i> 
+
+															</md-button>
+
+
+														</td>
+
+														<td md-cell style="width: 5%;text-align: center;">
+															<md-button  ng-if="usuario.breastIndication == true && usuario.siftingBreast!=true && usuario.siftingBreast!=false && usuario.lastIndicationBreast != 2" ng-click="agendaSeno($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Mamografía
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color:grey;" aria-hidden="true"></i> 
+															</md-button>
+
+
+															<md-button  ng-if="usuario.breastIndication == true && usuario.siftingBreast==false && usuario.lastIndicationBreast != 2" ng-click="agendaSeno($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Mamografía
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color:#f5bd3b;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.breastIndication == true  && usuario.siftingBreast==true && usuario.lastIndicationBreast != 2" ng-click="agendaSeno($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Mamografía
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color:#4fd467;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.breastIndication == true && usuario.lastIndicationBreast == 2" ng-click="agendaSeno($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Mamografía
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color: rgb(236, 0, 0)" aria-hidden="true"></i> 
+															</md-button>
+
+														</td>
+														<td md-cell style="width: 5%;text-align: center;">
+
+															<md-button  ng-if="usuario.cervixIndication == true && usuario.siftingCervix!=true && usuario.siftingCervix!=false && usuario.lastIndicationCervix != 2" ng-click="agendaCervix($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Citología
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color: grey;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.cervixIndication == true && usuario.siftingCervix==false && usuario.lastIndicationCervix != 2" ng-click="agendaCervix($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Citología
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color:#f5bd3b;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.cervixIndication == true  && usuario.siftingCervix==true && usuario.lastIndicationCervix != 2" ng-click="agendaCervix($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Citología
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color:#4fd467;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.lastIndicationCervix == 2 && usuario.cervixIndication == true" ng-click="agendaCervix($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Citología (Usuaria Excluida con indicación)
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color: rgb(236, 0, 0)" aria-hidden="true"></i> 
+															</md-button>
+
+														</td>
+
+														<td md-cell style="">
+															<md-select ng-model="usuario.lastIndicationBreast" placeholder="Motivo" class="md-no-underline">
+																<md-option ng-repeat="motivo in motivos" ng-value="motivo.id" ng-click="registrarMotivoMamografia($event, motivo.id, usuario.uid, usuario.lastIndicationBreast, usuario.mainIndex, 'm', usuario, 'sinIndicacion', usuario.mainIndex)">{{motivo.name}}</md-option>
+)															</md-select>
+														</td>
+
+														<td md-cell style="">
+															{{ motivos[usuario.lastIndicationBreast - 1].motivos[usuario.lastReasonBreast].nombre }}
+														</td>
+
+														<td md-cell class="flexi">
+
+															<md-button  ng-if="usuario.historialIndicacionesMamografia" ng-click="verHistorial($event, usuario.historialIndicacionesMamografia)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Historial Mamografía
+																</md-tooltip>
+																<i class="fa fa-history middleIcon" style="min-width:0px !important;color:#ff6390;" aria-hidden="true"></i> 
+															</md-button>
+
+														</td>
+
+													</tr>
+												</tbody>
+											</table>
+
+											
+
+										</md-table-container>
+										<md-table-pagination ng-model="sinIndicacion" md-limit="query.limit" md-limit-options="[10, 50, 100]" md-page="query.page"  md-total="{{sinIndicacion.length}}" md-label="{page: 'Página:', rowsPerPage: 'Filas por página:', of: 'de'}" md-on-paginate="logPagination" md-page-select></md-table-pagination>
+									</div>
+
+								</md-content>
+
+							</md-tab>
+
+
+							<md-tab label="Excluidas">
+								<md-content class="md-padding">
+
+									<md-toolbar class="md-hue-2" >
+										<div class="md-toolbar-tools">
+											<i class="fa fa-search middleIcon iconoSearch" aria-hidden="true"></i> 
+											<form name="filter.form" class="barraSearch">
+												<input ng-model="query.filter.filtrarExcluidas" ng-change="filtrarExcluidas()" type="text" class="inputSearch" placeholder="Buscar en esta tabla..."  >
+											</form>
+										</div>
+									</md-toolbar>
+
+									<div id="contenedorTabla" class="" >
+
+										<md-table-container style="" >   
+
+											<table md-table  ng-model="selected" md-progress="promise">
+												<thead md-head md-order="query.order" md-on-reorder="reordenar">
+													<tr md-row>
+
+														<th md-column md-order-by="name"><span>Nombre</span></th>
+														<th md-column ><span>Puntos</span></th>
+														<th md-column md-order-by="milliseconds"><span>Fecha creación</span></th>
+														<th md-column ><span>Edad</span></th>
+														<th md-column ><span>Estado</span></th>
+														<th md-column md-order-by="appointment"">Desea ser contactada</th>
+														<th md-column md-numeric style="width:30% !important;text-align: center;">Acciones disponibles</th>
+														<th md-column ><span>Agenda mamografía</span></th>
+														<th md-column ><span>Agenda citología</span></th>
+														<th md-column ><span>Filtros Mamografía</span></th>
+														<th md-column ><span>Especificación Mamografía</span></th>
+														<th md-column ><span>Historial</span></th>
+
+													</tr>
+												</thead>
+												<tbody md-body style="height: 500px !important;max-height: 500px !important;">
+													<tr md-row md-select="false" md-select-id="name" class="animate"   ng-repeat="(key, usuario) in excluidas | orderBy: query.order  | limitTo: query.limit : (query.page -1) * query.limit">
+
+														<td md-cell style="">{{usuario.name}} {{usuario.lastName}}</td>
+														<td md-cell style="">{{usuario.pointsCervix + usuario.pointsBreast}}</td>
+														<td md-cell style="">{{usuario.dateCreated}}</td>
+														<td md-cell style="">{{calcularEdad(usuario.dateBirthday)}}</td>
+
+
+														<td  md-cell style="">
+															<div ng-if="usuario.state == 0 && usuario.profileCompleted != 1">
+																Cuenta creada
+															</div>
+															<div ng-if="usuario.profileCompleted == 1 && usuario.state == 0">
+																Perfil completado
+															</div>
+															<div ng-if="usuario.state == 1">
+																Test Iniciado
+															</div>
+															<div ng-if="usuario.state == 2 && usuario.repetitionsAnswersBreast>0 && usuario.repetitionsAnswersCervix>0">
+																Test completado
+															</div>
+															<div ng-if="usuario.state == 2 && (usuario.repetitionsAnswersBreast==0 ||usuario.repetitionsAnswersCervix==0)">
+																Test Iniciado
+															</div>
+															<div ng-if="usuario.state == 3">
+																Premio entregado (legado)
+															</div>
+														</td>
+
+
+
+														<td  md-cell >
+															<div ng-if="usuario.appointment==true">
+																Si
+															</div>
+
+															<div ng-if="usuario.appointment==false">
+																No
+															</div>
+															<div ng-if="usuario.appointment==undefined">
+																N/A
+															</div>
+														</td>
+
+														<td md-cell style="width: 30%;text-align: left;">
+
+															<md-button ng-if="usuario.profileCompleted==0" ng-click="detalleUsuario($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-user middleIcon" style="min-width:0px !important;color:#db2763;" aria-hidden="true"></i> 
+																<md-tooltip md-direction="bottom">
+																	Perfil
+																</md-tooltip>
+															</md-button>
+
+															<md-button ng-if="usuario.profileCompleted==1" ng-click="detalleUsuario($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-user middleIcon" style="min-width:0px !important;color:#4fd467;" aria-hidden="true"></i> 
+																<md-tooltip md-direction="bottom">
+																	Perfil
+																</md-tooltip>
+															</md-button>
+
+															<md-button ng-click="respuestasUsuarioSeno($event, usuario)" ng-if="usuario.repetitionsAnswersBreast == 2" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-list middleIcon" style="min-width:0px !important;color:#ff6390; position: absolute" aria-hidden="true"></i> 
+																<i class="fa fa-check middleIcon" style="min-width:0px !important;color:#4fd467; position: inherit;" aria-hidden="true"></i> 
+																<md-tooltip md-direction="bottom">
+																	Respuestas seno
+																</md-tooltip>
+															</md-button>
+
+															<md-button ng-click="respuestasUsuarioSeno($event, usuario)" ng-if=" usuario.repetitionsAnswersBreast == 1 "  style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-list middleIcon" style="min-width:0px !important;color:#ff6390" aria-hidden="true"></i> 
+
+																<md-tooltip md-direction="bottom">
+																	Respuestas seno
+																</md-tooltip>
+															</md-button>
+
+															<md-button ng-click="respuestasUsuarioCervix($event, usuario)" ng-if="usuario.repetitionsAnswersCervix == 2" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-list middleIcon" style="min-width:0px !important;color:#009997; position: absolute;" aria-hidden="true"></i> 
+																<i class="fa fa-check middleIcon" style="min-width:0px !important;color:#4fd467; position: inherit;" aria-hidden="true"></i> 
+																<md-tooltip md-direction="bottom">
+																	Respuestas cuello uterino
+																</md-tooltip>
+															</md-button>
+
+															<md-button ng-click="respuestasUsuarioCervix($event, usuario)" ng-if=" usuario.repetitionsAnswersCervix==1" style="min-width:0px !important;  margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-list middleIcon" style="min-width:0px !important;color:#009997;" aria-hidden="true"></i> 
+																<md-tooltip md-direction="bottom">
+																	Respuestas cuello uterino
+																</md-tooltip>
+															</md-button>
+
+															<md-button  ng-if="usuario.repetitionsAnswersCervix == 2 && usuario.repetitionsAnswersBreast == 2 && usuario.state == 3"  style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Premio entregado
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#4fd467;" aria-hidden="true"></i> 
+															</md-button>
+
+
+															<md-button  ng-if="usuario.repetitionsAnswersCervix == 2 && usuario.repetitionsAnswersBreast == 2 && usuario.state == 2" ng-click="entregarPremio($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Entregar premio
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#a30039;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.examGiftCervix==false" ng-click="entregarPremioExamenCervix($event, usuario)" style="color:#009997 ;min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Premio por examen: citología
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#009997;" aria-hidden="true"></i> 
+															</md-button>
+
+
+															<md-button  ng-if="usuario.examGiftCervix==true"  style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Premio por examen: citología entregado
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#009997; position: absolute;" aria-hidden="true"></i> 
+																<i class="fa fa-check middleIcon" style="min-width:0px !important;color:#4fd467; position: inherit;" aria-hidden="true"></i> 
+
+															</md-button>
+
+															<md-button  ng-if="usuario.examGiftBreast==false" ng-click="entregarPremioExamenBreast($event, usuario)" style="color:#ff6390;min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Premio por examen: mamografía
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#ff6390;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.examGiftBreast==true"  style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Premio por examen: mamografía entregado
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#ff6390; position: absolute;" aria-hidden="true"></i> 
+																<i class="fa fa-check middleIcon" style="min-width:0px !important;color:#4fd467; position: inherit;" aria-hidden="true"></i> 
+
+															</md-button>
+
+
+														</td>
+
+														<td md-cell style="width: 5%;text-align: center;">
+															<md-button  ng-if="usuario.breastIndication == true && usuario.siftingBreast!=true && usuario.siftingBreast!=false && usuario.lastIndicationBreast != 2" ng-click="agendaSeno($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Mamografía
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color:grey;" aria-hidden="true"></i> 
+															</md-button>
+
+
+															<md-button  ng-if="usuario.breastIndication == true && usuario.siftingBreast==false && usuario.lastIndicationBreast != 2" ng-click="agendaSeno($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Mamografía
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color:#f5bd3b;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.breastIndication == true  && usuario.siftingBreast==true && usuario.lastIndicationBreast != 2" ng-click="agendaSeno($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Mamografía
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color:#4fd467;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.breastIndication == true && usuario.lastIndicationBreast == 2" ng-click="agendaSeno($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Mamografía
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color: rgb(236, 0, 0)" aria-hidden="true"></i> 
+															</md-button>
+
+														</td>
+														<td md-cell style="width: 5%;text-align: center;">
+
+															<md-button  ng-if="usuario.cervixIndication == true && usuario.siftingCervix!=true && usuario.siftingCervix!=false && usuario.lastIndicationCervix != 2" ng-click="agendaCervix($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Citología
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color: grey;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.cervixIndication == true && usuario.siftingCervix==false && usuario.lastIndicationCervix != 2" ng-click="agendaCervix($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Citología
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color:#f5bd3b;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.cervixIndication == true  && usuario.siftingCervix==true && usuario.lastIndicationCervix != 2" ng-click="agendaCervix($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Citología
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color:#4fd467;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.lastIndicationCervix == 2 && usuario.cervixIndication == true" ng-click="agendaCervix($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Citología (Usuaria Excluida con indicación)
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color: rgb(236, 0, 0)" aria-hidden="true"></i> 
+															</md-button>
+
+														</td>
+
+														<td md-cell style="">
+															<md-select ng-model="usuario.lastIndicationBreast" placeholder="Motivo" class="md-no-underline">
+																<md-option ng-repeat="motivo in motivos" ng-value="motivo.id" ng-click="registrarMotivoMamografia($event, motivo.id, usuario.uid, usuario.lastIndicationBreast, usuario.mainIndex, 'm', usuario, 'excluidas', usuario.mainIndex)">{{motivo.name}}</md-option>
+															</md-select>
+														</td>
+
+														<td md-cell style="">
+															{{ motivos[usuario.lastIndicationBreast - 1].motivos[usuario.lastReasonBreast].nombre }}
+														</td>
+
+														<td md-cell class="flexi">
+
+															<md-button  ng-if="usuario.historialIndicacionesMamografia" ng-click="verHistorial($event, usuario.historialIndicacionesMamografia)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Historial Mamografía
+																</md-tooltip>
+																<i class="fa fa-history middleIcon" style="min-width:0px !important;color:#ff6390;" aria-hidden="true"></i> 
+															</md-button>
+
+														</td>
+
+													</tr>
+												</tbody>
+											</table>
+
+											
+
+										</md-table-container>
+										<md-table-pagination ng-model="excluidas" md-limit="query.limit" md-limit-options="[10, 50, 100]" md-page="query.page"  md-total="{{excluidas.length}}" md-label="{page: 'Página:', rowsPerPage: 'Filas por página:', of: 'de'}" md-on-paginate="logPagination" md-page-select></md-table-pagination>
+									</div>
+
+								</md-content>
+							</md-tab>
+
+							<md-tab label="Por tamizar">
+								<md-content class="md-padding">
+
+									<md-toolbar class="md-hue-2" >
+										<div class="md-toolbar-tools">
+											<i class="fa fa-search middleIcon iconoSearch" aria-hidden="true"></i> 
+											<form name="filter.form" class="barraSearch">
+												<input ng-model="query.filter.filtrarPorTamizar" ng-change="filtrarPorTamizar()" type="text" class="inputSearch" placeholder="Buscar en esta tabla..."  >
+											</form>
+										</div>
+									</md-toolbar>
+
+									<div id="contenedorTabla" class="" >
+
+										<md-table-container style="" >   
+
+											<table md-table  ng-model="selected" md-progress="promise">
+												<thead md-head md-order="query.order" md-on-reorder="reordenar">
+													<tr md-row>
+
+														<th md-column md-order-by="name"><span>Nombre</span></th>
+														<th md-column ><span>Puntos</span></th>
+														<th md-column md-order-by="milliseconds"><span>Fecha creación</span></th>
+														<th md-column ><span>Edad</span></th>
+														<th md-column ><span>Estado</span></th>
+														<th md-column md-order-by="appointment"">Desea ser contactada</th>
+														<th md-column md-numeric style="width:30% !important;text-align: center;">Acciones disponibles</th>
+														<th md-column ><span>Agenda mamografía</span></th>
+														<th md-column ><span>Agenda citología</span></th>
+														<th md-column ><span>Filtros Mamografía</span></th>
+														<th md-column ><span>Especificación Mamografía</span></th>
+														<th md-column ><span>Historial</span></th>
+
+													</tr>
+												</thead>
+												<tbody md-body style="height: 500px !important;max-height: 500px !important;">
+													<tr md-row md-select="false" md-select-id="name" class="animate"   ng-repeat="(key, usuario) in porTamizar | orderBy: query.order  | limitTo: query.limit : (query.page -1) * query.limit ">
+
+														<td md-cell style="">{{usuario.name}} {{usuario.lastName}}</td>
+														<td md-cell style="">{{usuario.pointsCervix + usuario.pointsBreast}}</td>
+														<td md-cell style="">{{usuario.dateCreated}}</td>
+														<td md-cell style="">{{calcularEdad(usuario.dateBirthday)}}</td>
+
+
+														<td  md-cell style="">
+															<div ng-if="usuario.state == 0 && usuario.profileCompleted != 1">
+																Cuenta creada
+															</div>
+															<div ng-if="usuario.profileCompleted == 1 && usuario.state == 0">
+																Perfil completado
+															</div>
+															<div ng-if="usuario.state == 1">
+																Test Iniciado
+															</div>
+															<div ng-if="usuario.state == 2 && usuario.repetitionsAnswersBreast>0 && usuario.repetitionsAnswersCervix>0">
+																Test completado
+															</div>
+															<div ng-if="usuario.state == 2 && (usuario.repetitionsAnswersBreast==0 ||usuario.repetitionsAnswersCervix==0)">
+																Test Iniciado
+															</div>
+															<div ng-if="usuario.state == 3">
+																Premio entregado (legado)
+															</div>
+														</td>
+
+
+
+														<td  md-cell >
+															<div ng-if="usuario.appointment==true">
+																Si
+															</div>
+
+															<div ng-if="usuario.appointment==false">
+																No
+															</div>
+															<div ng-if="usuario.appointment==undefined">
+																N/A
+															</div>
+														</td>
+
+														<td md-cell style="width: 30%;text-align: left;">
+
+															<md-button ng-if="usuario.profileCompleted==0" ng-click="detalleUsuario($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-user middleIcon" style="min-width:0px !important;color:#db2763;" aria-hidden="true"></i> 
+																<md-tooltip md-direction="bottom">
+																	Perfil
+																</md-tooltip>
+															</md-button>
+
+															<md-button ng-if="usuario.profileCompleted==1" ng-click="detalleUsuario($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-user middleIcon" style="min-width:0px !important;color:#4fd467;" aria-hidden="true"></i> 
+																<md-tooltip md-direction="bottom">
+																	Perfil
+																</md-tooltip>
+															</md-button>
+
+															<md-button ng-click="respuestasUsuarioSeno($event, usuario)" ng-if="usuario.repetitionsAnswersBreast == 2" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-list middleIcon" style="min-width:0px !important;color:#ff6390; position: absolute" aria-hidden="true"></i> 
+																<i class="fa fa-check middleIcon" style="min-width:0px !important;color:#4fd467; position: inherit;" aria-hidden="true"></i> 
+																<md-tooltip md-direction="bottom">
+																	Respuestas seno
+																</md-tooltip>
+															</md-button>
+
+															<md-button ng-click="respuestasUsuarioSeno($event, usuario)" ng-if=" usuario.repetitionsAnswersBreast == 1 "  style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-list middleIcon" style="min-width:0px !important;color:#ff6390" aria-hidden="true"></i> 
+
+																<md-tooltip md-direction="bottom">
+																	Respuestas seno
+																</md-tooltip>
+															</md-button>
+
+															<md-button ng-click="respuestasUsuarioCervix($event, usuario)" ng-if="usuario.repetitionsAnswersCervix == 2" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-list middleIcon" style="min-width:0px !important;color:#009997; position: absolute;" aria-hidden="true"></i> 
+																<i class="fa fa-check middleIcon" style="min-width:0px !important;color:#4fd467; position: inherit;" aria-hidden="true"></i> 
+																<md-tooltip md-direction="bottom">
+																	Respuestas cuello uterino
+																</md-tooltip>
+															</md-button>
+
+															<md-button ng-click="respuestasUsuarioCervix($event, usuario)" ng-if=" usuario.repetitionsAnswersCervix==1" style="min-width:0px !important;  margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-list middleIcon" style="min-width:0px !important;color:#009997;" aria-hidden="true"></i> 
+																<md-tooltip md-direction="bottom">
+																	Respuestas cuello uterino
+																</md-tooltip>
+															</md-button>
+
+															<md-button  ng-if="usuario.repetitionsAnswersCervix == 2 && usuario.repetitionsAnswersBreast == 2 && usuario.state == 3"  style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Premio entregado
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#4fd467;" aria-hidden="true"></i> 
+															</md-button>
+
+
+															<md-button  ng-if="usuario.repetitionsAnswersCervix == 2 && usuario.repetitionsAnswersBreast == 2 && usuario.state == 2" ng-click="entregarPremio($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Entregar premio
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#a30039;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.examGiftCervix==false" ng-click="entregarPremioExamenCervix($event, usuario)" style="color:#009997 ;min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Premio por examen: citología
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#009997;" aria-hidden="true"></i> 
+															</md-button>
+
+
+															<md-button  ng-if="usuario.examGiftCervix==true"  style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Premio por examen: citología entregado
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#009997; position: absolute;" aria-hidden="true"></i> 
+																<i class="fa fa-check middleIcon" style="min-width:0px !important;color:#4fd467; position: inherit;" aria-hidden="true"></i> 
+
+															</md-button>
+
+															<md-button  ng-if="usuario.examGiftBreast==false" ng-click="entregarPremioExamenBreast($event, usuario)" style="color:#ff6390;min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Premio por examen: mamografía
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#ff6390;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.examGiftBreast==true"  style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Premio por examen: mamografía entregado
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#ff6390; position: absolute;" aria-hidden="true"></i> 
+																<i class="fa fa-check middleIcon" style="min-width:0px !important;color:#4fd467; position: inherit;" aria-hidden="true"></i> 
+
+															</md-button>
+
+
+														</td>
+
+														<td md-cell style="width: 5%;text-align: center;">
+															<md-button  ng-if="usuario.breastIndication == true && usuario.siftingBreast!=true && usuario.siftingBreast!=false && usuario.lastIndicationBreast != 2" ng-click="agendaSeno($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Mamografía
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color:grey;" aria-hidden="true"></i> 
+															</md-button>
+
+
+															<md-button  ng-if="usuario.breastIndication == true && usuario.siftingBreast==false && usuario.lastIndicationBreast != 2" ng-click="agendaSeno($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Mamografía
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color:#f5bd3b;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.breastIndication == true  && usuario.siftingBreast==true && usuario.lastIndicationBreast != 2" ng-click="agendaSeno($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Mamografía
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color:#4fd467;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.breastIndication == true && usuario.lastIndicationBreast == 2" ng-click="agendaSeno($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Mamografía
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color: rgb(236, 0, 0)" aria-hidden="true"></i> 
+															</md-button>
+
+														</td>
+														<td md-cell style="width: 5%;text-align: center;">
+
+															<md-button  ng-if="usuario.cervixIndication == true && usuario.siftingCervix!=true && usuario.siftingCervix!=false && usuario.lastIndicationCervix != 2" ng-click="agendaCervix($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Citología
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color: grey;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.cervixIndication == true && usuario.siftingCervix==false && usuario.lastIndicationCervix != 2" ng-click="agendaCervix($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Citología
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color:#f5bd3b;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.cervixIndication == true  && usuario.siftingCervix==true && usuario.lastIndicationCervix != 2" ng-click="agendaCervix($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Citología
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color:#4fd467;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.lastIndicationCervix == 2 && usuario.cervixIndication == true" ng-click="agendaCervix($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Citología (Usuaria Excluida con indicación)
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color: rgb(236, 0, 0)" aria-hidden="true"></i> 
+															</md-button>
+
+														</td>
+
+														<td md-cell style="">
+															<md-select ng-model="usuario.lastIndicationBreast" placeholder="Motivo" class="md-no-underline">
+																<md-option ng-repeat="motivo in motivos" ng-value="motivo.id" ng-click="registrarMotivoMamografia($event, motivo.id, usuario.uid, usuario.lastIndicationBreast, usuario.mainIndex, 'm', usuario, 'porTamizar', usuario.mainIndex)">{{motivo.name}}</md-option>
+															</md-select>
+														</td>
+
+														<td md-cell style="">
+															{{ motivos[usuario.lastIndicationBreast - 1].motivos[usuario.lastReasonBreast].nombre }}
+														</td>
+
+														<td md-cell class="flexi">
+
+															<md-button  ng-if="usuario.historialIndicacionesMamografia" ng-click="verHistorial($event, usuario.historialIndicacionesMamografia)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Historial Mamografía
+																</md-tooltip>
+																<i class="fa fa-history middleIcon" style="min-width:0px !important;color:#ff6390;" aria-hidden="true"></i> 
+															</md-button>
+
+														</td>
+
+													</tr>
+												</tbody>
+											</table>
+
+											
+
+										</md-table-container>
+										<md-table-pagination ng-model="porTamizar" md-limit="query.limit" md-limit-options="[10, 50, 100]" md-page="query.page"  md-total="{{porTamizar.length}}" md-label="{page: 'Página:', rowsPerPage: 'Filas por página:', of: 'de'}" md-on-paginate="logPagination" md-page-select></md-table-pagination>
+									</div>
+
+								</md-content>
+							</md-tab>
+
+
+							<md-tab label="Tamizado">
+								<md-content class="md-padding">
+
+									<md-toolbar class="md-hue-2" >
+										<div class="md-toolbar-tools">
+											<i class="fa fa-search middleIcon iconoSearch" aria-hidden="true"></i> 
+											<form name="filter.form" class="barraSearch">
+												<input ng-model="query.filter.filtrarTamizado" ng-change="filtrarTamizado()" type="text" class="inputSearch" placeholder="Buscar en esta tabla..."  >
+											</form>
+										</div>
+									</md-toolbar>
+
+									<div id="contenedorTabla" class="" >
+
+										<md-table-container style="" >   
+
+											<table md-table  ng-model="selected" md-progress="promise">
+												<thead md-head md-order="query.order" md-on-reorder="reordenar">
+													<tr md-row>
+
+														<th md-column md-order-by="name"><span>Nombre</span></th>
+														<th md-column ><span>Puntos</span></th>
+														<th md-column md-order-by="milliseconds"><span>Fecha creación</span></th>
+														<th md-column ><span>Edad</span></th>
+														<th md-column ><span>Estado</span></th>
+														<th md-column md-order-by="appointment"">Desea ser contactada</th>
+														<th md-column md-numeric style="width:30% !important;text-align: center;">Acciones disponibles</th>
+														<th md-column ><span>Agenda mamografía</span></th>
+														<th md-column ><span>Agenda citología</span></th>
+														<th md-column ><span>Filtros Mamografía</span></th>
+														<th md-column ><span>Especificación Mamografía</span></th>
+														<th md-column ><span>Historial</span></th>
+
+													</tr>
+												</thead>
+												<tbody md-body style="height: 500px !important;max-height: 500px !important;">
+													<tr md-row md-select="false" md-select-id="name" class="animate"   ng-repeat="(key, usuario) in tamizado | orderBy: query.order  | limitTo: query.limit : (query.page -1) * query.limit ">
+
+														<td md-cell style="">{{usuario.name}} {{usuario.lastName}}</td>
+														<td md-cell style="">{{usuario.puntos}}</td>
+														<td md-cell style="">{{usuario.dateCreated}}</td>
+														<td md-cell style="">{{usuario.edad}}</td>
+
+														<td  md-cell style="">{{usuario.textoEstado}}</td>
+
+														<td  md-cell >{{usuario.cita}}</td>
+
+														<td md-cell style="width: 30%;text-align: left;">
+
+															<md-button ng-if="usuario.profileCompleted==0" ng-click="detalleUsuario($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-user middleIcon" style="min-width:0px !important;color:#db2763;" aria-hidden="true"></i> 
+																<md-tooltip md-direction="bottom">
+																	Perfil
+																</md-tooltip>
+															</md-button>
+
+															<md-button ng-if="usuario.profileCompleted==1" ng-click="detalleUsuario($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-user middleIcon" style="min-width:0px !important;color:#4fd467;" aria-hidden="true"></i> 
+																<md-tooltip md-direction="bottom">
+																	Perfil
+																</md-tooltip>
+															</md-button>
+
+															<md-button ng-click="respuestasUsuarioSeno($event, usuario)" ng-if="usuario.repetitionsAnswersBreast == 2" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-list middleIcon" style="min-width:0px !important;color:#ff6390; position: absolute" aria-hidden="true"></i> 
+																<i class="fa fa-check middleIcon" style="min-width:0px !important;color:#4fd467; position: inherit;" aria-hidden="true"></i> 
+																<md-tooltip md-direction="bottom">
+																	Respuestas seno
+																</md-tooltip>
+															</md-button>
+
+															<md-button ng-click="respuestasUsuarioSeno($event, usuario)" ng-if=" usuario.repetitionsAnswersBreast == 1 "  style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-list middleIcon" style="min-width:0px !important;color:#ff6390" aria-hidden="true"></i> 
+
+																<md-tooltip md-direction="bottom">
+																	Respuestas seno
+																</md-tooltip>
+															</md-button>
+
+															<md-button ng-click="respuestasUsuarioCervix($event, usuario)" ng-if="usuario.repetitionsAnswersCervix == 2" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-list middleIcon" style="min-width:0px !important;color:#009997; position: absolute;" aria-hidden="true"></i> 
+																<i class="fa fa-check middleIcon" style="min-width:0px !important;color:#4fd467; position: inherit;" aria-hidden="true"></i> 
+																<md-tooltip md-direction="bottom">
+																	Respuestas cuello uterino
+																</md-tooltip>
+															</md-button>
+
+															<md-button ng-click="respuestasUsuarioCervix($event, usuario)" ng-if=" usuario.repetitionsAnswersCervix==1" style="min-width:0px !important;  margin-left: 0px; margin-right: 0px;">
+																<i class="fa fa-list middleIcon" style="min-width:0px !important;color:#009997;" aria-hidden="true"></i> 
+																<md-tooltip md-direction="bottom">
+																	Respuestas cuello uterino
+																</md-tooltip>
+															</md-button>
+
+															<md-button  ng-if="usuario.repetitionsAnswersCervix == 2 && usuario.repetitionsAnswersBreast == 2 && usuario.state == 3"  style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Premio entregado
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#4fd467;" aria-hidden="true"></i> 
+															</md-button>
+
+
+															<md-button  ng-if="usuario.repetitionsAnswersCervix == 2 && usuario.repetitionsAnswersBreast == 2 && usuario.state == 2" ng-click="entregarPremio($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Entregar premio
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#a30039;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.examGiftCervix==false" ng-click="entregarPremioExamenCervix($event, usuario)" style="color:#009997 ;min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Premio por examen: citología
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#009997;" aria-hidden="true"></i> 
+															</md-button>
+
+
+															<md-button  ng-if="usuario.examGiftCervix==true"  style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Premio por examen: citología entregado
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#009997; position: absolute;" aria-hidden="true"></i> 
+																<i class="fa fa-check middleIcon" style="min-width:0px !important;color:#4fd467; position: inherit;" aria-hidden="true"></i> 
+
+															</md-button>
+
+															<md-button  ng-if="usuario.examGiftBreast==false" ng-click="entregarPremioExamenBreast($event, usuario)" style="color:#ff6390;min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Premio por examen: mamografía
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#ff6390;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.examGiftBreast==true"  style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Premio por examen: mamografía entregado
+																</md-tooltip>
+																<i class="fa fa-gift middleIcon" style="min-width:0px !important;color:#ff6390; position: absolute;" aria-hidden="true"></i> 
+																<i class="fa fa-check middleIcon" style="min-width:0px !important;color:#4fd467; position: inherit;" aria-hidden="true"></i> 
+
+															</md-button>
+
+														</td>
+
+														<td md-cell style="width: 5%;text-align: center;">
+															<md-button  ng-if="usuario.breastIndication == true && usuario.siftingBreast!=true && usuario.siftingBreast!=false && usuario.lastIndicationBreast != 2" ng-click="agendaSeno($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Mamografía
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color:grey;" aria-hidden="true"></i> 
+															</md-button>
+
+
+															<md-button  ng-if="usuario.breastIndication == true && usuario.siftingBreast==false && usuario.lastIndicationBreast != 2" ng-click="agendaSeno($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Mamografía
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color:#f5bd3b;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.breastIndication == true  && usuario.siftingBreast==true && usuario.lastIndicationBreast != 2" ng-click="agendaSeno($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Mamografía
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color:#4fd467;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.breastIndication == true && usuario.lastIndicationBreast == 2" ng-click="agendaSeno($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Mamografía
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color: rgb(236, 0, 0)" aria-hidden="true"></i> 
+															</md-button>
+
+														</td>
+														<td md-cell style="width: 5%;text-align: center;">
+
+															<md-button  ng-if="usuario.cervixIndication == true && usuario.siftingCervix!=true && usuario.siftingCervix!=false && usuario.lastIndicationCervix != 2" ng-click="agendaCervix($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Citología
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color: grey;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.cervixIndication == true && usuario.siftingCervix==false && usuario.lastIndicationCervix != 2" ng-click="agendaCervix($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Citología
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color:#f5bd3b;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.cervixIndication == true  && usuario.siftingCervix==true && usuario.lastIndicationCervix != 2" ng-click="agendaCervix($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Citología
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color:#4fd467;" aria-hidden="true"></i> 
+															</md-button>
+
+															<md-button  ng-if="usuario.lastIndicationCervix == 2 && usuario.cervixIndication == true" ng-click="agendaCervix($event, usuario)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Citología (Usuaria Excluida con indicación)
+																</md-tooltip>
+																<i class="fa fa-address-book-o middleIcon" style="min-width:0px !important;color: rgb(236, 0, 0)" aria-hidden="true"></i> 
+															</md-button>
+
+														</td>
+
+														<td md-cell style="">
+															<md-select ng-model="usuario.lastIndicationBreast" placeholder="Motivo" class="md-no-underline">
+																<md-option ng-repeat="motivo in motivos" ng-value="motivo.id" ng-click="registrarMotivoMamografia($event, motivo.id, usuario.uid, usuario.lastIndicationBreast, usuario.mainIndex, 'm', usuario, 'tamizado', usuario.mainIndex)">{{motivo.name}}</md-option>
+															</md-select>
+														</td>
+
+														<td md-cell style="">
+															{{ motivos[usuario.lastIndicationBreast - 1].motivos[usuario.lastReasonBreast].nombre }}
+														</td>
+
+														<td md-cell class="flexi">
+
+															<md-button  ng-if="usuario.historialIndicacionesMamografia" ng-click="verHistorial($event, usuario.historialIndicacionesMamografia)" style="min-width:0px !important; margin-left: 0px; margin-right: 0px;">
+																<md-tooltip md-direction="bottom">
+																	Historial Mamografía
+																</md-tooltip>
+																<i class="fa fa-history middleIcon" style="min-width:0px !important;color:#ff6390;" aria-hidden="true"></i> 
+															</md-button>
+
+														</td>
+
+													</tr>
+												</tbody>
+											</table>
+
+											
+
+										</md-table-container>
+										<md-table-pagination ng-model="tamizado" md-limit="query.limit" md-limit-options="[10, 50, 100]" md-page="query.page"  md-total="{{tamizado.length}}" md-label="{page: 'Página:', rowsPerPage: 'Filas por página:', of: 'de'}" md-on-paginate="logPagination" md-page-select></md-table-pagination>
+									</div>
+
+								</md-content>
+							</md-tab>
+
+
+
+
+						</md-tabs>
+					</div>
+
+				</div>
+
+			</md-content>
+
+		</div>
+
+	</div> 
+
+</div> 
+
+
+
+
+</section>
+
+<div class="foot" style="height: 45px; width: 100%; background-color: #ff6390; color: white;">
+	<p style="text-align: center;">Todos los derechos reservados | Ámate | 2017</p>
+</div>
+
